@@ -1,0 +1,203 @@
+@import 'tailwindcss';
+
+@theme {
+  /* ─── Font Family ─── */
+  --font-sans: 'Pretendard Variable', 'Pretendard', 'Apple SD Gothic Neo', system-ui, sans-serif;
+
+  /* ─── Neutral ─── */
+  --color-neutral-950: #171717;
+  --color-neutral-900: #1c1c1c;
+  --color-neutral-800: #262626;
+  --color-neutral-700: #333333;
+  --color-neutral-600: #5c5c5c;
+  --color-neutral-500: #7b7b7b;
+  --color-neutral-400: #a3a3a3;
+  --color-neutral-300: #d1d1d1;
+  --color-neutral-200: #ebebeb;
+  --color-neutral-100: #f7f7f7;
+  --color-neutral-50: #fafafa;
+  --color-neutral-0: #ffffff;
+
+  /* ─── Brand (Trace Black) ─── */
+  --color-brand-950: #0a0a0a;
+  --color-brand-900: #171717;
+  --color-brand-800: #262626;
+  --color-brand-700: #333333;
+  --color-brand-500: #525252;
+
+  /* ─── Accent (Green = positive / 검증 색) ─── */
+  --color-accent-900: #14532d;
+  --color-accent-700: #15803d;
+  --color-accent-600: #16a34a;
+  --color-accent-500: #22c55e;
+  --color-accent-100: #dcfce7;
+  --color-accent-50: #f0fdf4;
+
+  /* ─── Negative ─── */
+  --color-negative-700: #b91c1c;
+  --color-negative-600: #dc2626;
+  --color-negative-500: #ef4444;
+  --color-negative-100: #fee2e2;
+  --color-negative-50: #fef2f2;
+
+  /* ─── Yellow (별점) ─── */
+  --color-star: #f59e0b;
+
+  /* ─── Semantic ─── */
+  --color-bg-white: #ffffff;
+  --color-bg-weak: #fafafa;
+  --color-bg-soft: #f5f5f5;
+  --color-bg-sub: #e5e5e5;
+  --color-bg-strong: #171717;
+
+  --color-text-strong: #171717;
+  --color-text-sub: #525252;
+  --color-text-soft: #737373;
+  --color-text-disabled: #a3a3a3;
+  --color-text-white: #ffffff;
+
+  --color-stroke-strong: #171717;
+  --color-stroke-sub: #d4d4d4;
+  --color-stroke-soft: #e5e5e5;
+  --color-stroke-weak: #f0f0f0;
+
+  --color-icon-strong: #171717;
+  --color-icon-sub: #525252;
+  --color-icon-soft: #a3a3a3;
+
+  /* ─── Typography ─── */
+  --font-size-h1: 2.25rem;
+  --font-size-h1--line-height: 2.625rem;
+  --font-size-h1--letter-spacing: -0.02em;
+
+  --font-size-h2: 1.875rem;
+  --font-size-h2--line-height: 2.25rem;
+  --font-size-h2--letter-spacing: -0.015em;
+
+  --font-size-h3: 1.5rem;
+  --font-size-h3--line-height: 2rem;
+  --font-size-h3--letter-spacing: -0.01em;
+
+  --font-size-h4: 1.25rem;
+  --font-size-h4--line-height: 1.75rem;
+  --font-size-h4--letter-spacing: -0.005em;
+
+  --font-size-t1: 1.5rem;
+  --font-size-t1--line-height: 2rem;
+
+  --font-size-t2: 1.125rem;
+  --font-size-t2--line-height: 1.625rem;
+
+  --font-size-t3: 1rem;
+  --font-size-t3--line-height: 1.5rem;
+
+  --font-size-t4: 0.875rem;
+  --font-size-t4--line-height: 1.25rem;
+
+  --font-size-t5: 0.75rem;
+  --font-size-t5--line-height: 1.125rem;
+
+  --font-size-b1: 1.125rem;
+  --font-size-b1--line-height: 1.75rem;
+
+  --font-size-b2: 1rem;
+  --font-size-b2--line-height: 1.625rem;
+
+  --font-size-b3: 0.9375rem;
+  --font-size-b3--line-height: 1.5rem;
+
+  --font-size-b4: 0.875rem;
+  --font-size-b4--line-height: 1.4375rem;
+
+  --font-size-b5: 0.75rem;
+  --font-size-b5--line-height: 1.125rem;
+
+  --font-size-c1: 0.8125rem;
+  --font-size-c1--line-height: 1.125rem;
+
+  --font-size-c2: 0.75rem;
+  --font-size-c2--line-height: 1rem;
+
+  --font-size-c3: 0.6875rem;
+  --font-size-c3--line-height: 1rem;
+
+  /* ─── Radius / Shadow ─── */
+  --radius-0: 0px;
+  --radius-4: 4px;
+  --radius-6: 6px;
+  --radius-8: 8px;
+  --radius-10: 10px;
+  --radius-12: 12px;
+  --radius-16: 16px;
+  --radius-20: 20px;
+  --radius-full: 999px;
+
+  --shadow-01: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-02: 0 4px 12px 0 rgba(0, 0, 0, 0.06);
+  --shadow-03: 0 8px 24px 0 rgba(0, 0, 0, 0.08);
+
+  /* ─── Z-Index ─── */
+  --z-sticky: 50;
+  --z-header: 100;
+  --z-dock: 200;
+  --z-backdrop: 300;
+  --z-modal: 500;
+  --z-toast: 600;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-bg-white);
+  color: var(--color-text-strong);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+:root {
+  --safe-area-top: env(safe-area-inset-top);
+  --safe-area-bottom: env(safe-area-inset-bottom);
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  line-clamp: 3;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
