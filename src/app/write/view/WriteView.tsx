@@ -1,12 +1,8 @@
 'use client'
 
 import Link from 'next/link'
+import { useState } from 'react'
 
-import { IcoCheck } from '@/shared/components/icons'
-import { StarRatingInput } from '@/shared/components/ui/StarRating'
-import TagPill from '@/shared/components/ui/Tag'
-
-import { formatVisitWindow } from '@/shared/lib/format'
 import { TAGS } from '@/shared/lib/tags'
 
 import { useWriteViewModel } from '../viewmodel'
@@ -18,13 +14,44 @@ interface WriteViewProps {
   demoTokens: { token: string; label: string }[]
 }
 
+const RATING_LABELS = ['', '별로', '아쉬움', '평타', '좋음', '최고']
+
+function pad2(n: number) {
+  return String(n).padStart(2, '0')
+}
+
+function fmtDate(iso: string) {
+  try {
+    const d = new Date(iso)
+    return `${d.getFullYear()}.${pad2(d.getMonth() + 1)}.${pad2(d.getDate())}`
+  } catch {
+    return iso
+  }
+}
+function fmtTime(iso: string) {
+  try {
+    const d = new Date(iso)
+    return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`
+  } catch {
+    return iso
+  }
+}
+function durationMin(enterIso: string, exitIso: string) {
+  try {
+    return Math.round((new Date(exitIso).getTime() - new Date(enterIso).getTime()) / 60_000)
+  } catch {
+    return 0
+  }
+}
+
 export default function WriteView({ token, demoTokens }: WriteViewProps) {
   const vm = useWriteViewModel({ token })
+  const [hover, setHover] = useState(0)
 
   if (vm.status.kind === 'loading') {
     return (
-      <main className="mx-auto flex w-full max-w-[1200px] flex-1 items-center justify-center px-4 md:px-6">
-        <p className="text-text-soft text-sm">토큰을 확인하는 중...</p>
+      <main className="mx-auto flex w-full max-w-[1200px] flex-1 items-center justify-center px-6">
+        <p className="text-fg-3 font-mono text-xs tracking-wider uppercase">LOADING · 토큰 확인중</p>
       </main>
     )
   }
@@ -32,24 +59,23 @@ export default function WriteView({ token, demoTokens }: WriteViewProps) {
   if (vm.status.kind === 'no-token') {
     return (
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10 md:px-6">
-        <h1 className="text-text-strong text-2xl font-bold md:text-3xl">후기 남기기</h1>
-        <p className="text-text-sub mt-3 text-sm md:text-base">
-          후기은 모두의주차장 앱에서 주차권을 사용한 운전자만 남길 수 있어요. 영수증 화면의 「Trace 남기기」 버튼을 눌러
+        <h1 className="text-fg text-2xl font-bold md:text-3xl">후기 남기기</h1>
+        <p className="text-fg-2 mt-3 text-sm md:text-base">
+          후기는 모두의주차장 앱에서 주차권을 사용한 운전자만 남길 수 있어요. 영수증 화면의 「Trace 남기기」 버튼을 눌러
           진입해주세요.
         </p>
-
-        <section className="bg-bg-soft mt-8 rounded-xl p-5">
-          <h2 className="text-text-strong text-sm font-semibold">데모용 진입 토큰</h2>
-          <p className="text-text-soft mt-1 text-xs">MVP 단계에서는 아래 토큰으로 후기 작성을 체험할 수 있어요.</p>
+        <section className="bg-bg-2 mt-8 rounded-xl p-5">
+          <h2 className="text-fg font-mono text-[11px] font-semibold tracking-wider uppercase">데모 진입 토큰</h2>
+          <p className="text-fg-3 mt-1 font-mono text-[10px]">MVP 단계에서 작성 흐름을 체험할 수 있어요.</p>
           <ul className="mt-3 flex flex-col gap-1.5">
             {demoTokens.map((d) => (
               <li key={d.token}>
                 <Link
                   href={`/write?token=${d.token}`}
-                  className="hover:bg-bg-white flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm transition-colors"
+                  className="hover:bg-bg flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm transition-colors"
                 >
-                  <span className="text-text-strong font-medium">{d.label}</span>
-                  <code className="text-text-soft font-mono text-xs">{d.token}</code>
+                  <span className="text-fg font-medium">{d.label}</span>
+                  <code className="text-fg-3 font-mono text-xs">{d.token}</code>
                 </Link>
               </li>
             ))}
@@ -64,124 +90,220 @@ export default function WriteView({ token, demoTokens }: WriteViewProps) {
   }
 
   const { verified } = vm.status
+  const dur = durationMin(verified.enterTime, verified.exitTime)
+  const durLabel = `${Math.floor(dur / 60)}H ${pad2(dur % 60)}M`
+  const exitDate = fmtDate(verified.exitTime)
+  const enterT = fmtTime(verified.enterTime)
+  const exitT = fmtTime(verified.exitTime)
+  const carHashShort = `${verified.paymentSeq.slice(0, 4).toLowerCase()}…${verified.paymentSeq.slice(-4).toLowerCase()}`
+  const barcodeText =
+    verified.exitTime.slice(0, 10).replace(/-/g, '') + '.' + verified.exitTime.slice(11, 16).replace(':', '')
+  const ratingDisplay = hover || vm.rating
 
   return (
-    <main className="mx-auto w-full max-w-[1200px] flex-1 px-4 py-6 md:px-6 md:py-10">
-      <div className="bg-accent-50 ring-accent-100 mb-6 flex items-center gap-2.5 rounded-xl px-4 py-3 ring-1 md:mb-8">
-        <span className="bg-accent-600 inline-flex size-5 shrink-0 items-center justify-center rounded-full text-white">
-          <IcoCheck />
-        </span>
-        <p className="text-accent-700 text-sm md:text-[15px]">
-          주차권 사용 확인됨 · <span className="font-bold">{verified.nickname}</span> 인증됨
-        </p>
-      </div>
-
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          void vm.submit()
-        }}
-        className="grid gap-6 md:grid-cols-[minmax(0,320px)_1fr] md:gap-10"
-      >
-        <aside className="border-stroke-soft md:sticky md:top-24 md:self-start md:rounded-2xl md:border md:bg-white md:p-6">
-          <p className="text-text-soft text-xs font-medium md:text-sm">방문한 주차장</p>
-          <h2 className="text-text-strong mt-1 text-lg leading-tight font-bold md:text-xl">
-            {verified.parkingLotName}
-          </h2>
-          <p className="text-text-sub mt-3 text-sm">{formatVisitWindow(verified.enterTime, verified.exitTime)}</p>
-        </aside>
-
-        <div className="flex flex-col gap-6 md:gap-8">
-          <section className="border-stroke-soft rounded-2xl border bg-white p-5 md:p-6">
-            <h3 className="text-text-strong text-base font-semibold">
-              이 주차장 어땠어요? <span className="text-negative-500">*</span>
-            </h3>
-            <div className="mt-4 flex justify-center md:justify-start">
-              <StarRatingInput value={vm.rating} onChange={vm.setRating} />
+    <main className="flex-1">
+      <div className="write-receipt-wrap">
+        <article className="write-receipt">
+          {/* Brand head */}
+          <header className="write-receipt__head">
+            <div className="write-receipt__brand">
+              TRACE
+              <span className="write-receipt__brand-dot" />
             </div>
-          </section>
+            <div className="write-receipt__sub">PARKING RECEIPT</div>
+          </header>
 
-          <section className="border-stroke-soft rounded-2xl border bg-white p-5 md:p-6">
-            <h3 className="text-text-strong text-base font-semibold">한 마디로 표현하면</h3>
-            <p className="text-text-soft mt-1 text-xs">여러 개 선택할 수 있어요</p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {TAGS.map((t) => {
-                const active = vm.tags.includes(t.key)
-                return (
-                  <button
-                    key={t.key}
-                    type="button"
-                    onClick={() => vm.toggleTag(t.key)}
-                    className="transition-transform active:scale-95"
-                    aria-pressed={active}
-                  >
-                    <span
-                      className={`inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-sm font-medium ring-1 transition-colors ${
-                        active
-                          ? t.sentiment === 'positive'
-                            ? 'bg-accent-600 ring-accent-700 text-white'
-                            : 'bg-negative-600 ring-negative-700 text-white'
-                          : 'bg-bg-white ring-stroke-sub text-text-sub hover:ring-text-strong'
-                      }`}
-                    >
-                      {t.label}
-                    </span>
-                  </button>
-                )
-              })}
+          <hr className="receipt__hr" />
+
+          {/* Profile (avatar + identity) */}
+          <div className="write-receipt__profile">
+            <div className="write-receipt__avatar">
+              <span className="write-receipt__avatar-letter">{verified.nickname.slice(2, 3)}</span>
+              <span className="write-receipt__avatar-check">
+                <svg viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M3 8 L7 12 L13 4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
             </div>
-            {vm.tags.length > 0 && (
-              <div className="text-text-soft mt-3 flex flex-wrap items-center gap-1 text-xs">
-                <span>선택됨:</span>
-                {vm.tags.map((k) => (
-                  <TagPill key={k} tag={k} />
-                ))}
+            <div className="write-receipt__id">
+              <div className="write-receipt__id-row">
+                <span className="write-receipt__id-label">닉네임</span>
+                <span className="write-receipt__id-val write-receipt__id-val--bold">{verified.nickname}</span>
               </div>
-            )}
-          </section>
+              <div className="write-receipt__id-row">
+                <span className="write-receipt__id-label">차량</span>
+                <span className="write-receipt__id-val">{carHashShort}</span>
+              </div>
+              <div className="write-receipt__id-row">
+                <span className="write-receipt__id-label">결제</span>
+                <span className="write-receipt__id-val">{verified.paymentSeq}</span>
+              </div>
+            </div>
+          </div>
 
-          <section className="border-stroke-soft rounded-2xl border bg-white p-5 md:p-6">
-            <h3 className="text-text-strong text-base font-semibold">자유롭게 남기고 싶은 말</h3>
-            <p className="text-text-soft mt-1 text-xs">선택 사항 · 최대 {vm.contentMaxLength}자</p>
-            <textarea
-              value={vm.content}
-              onChange={(e) => vm.updateContent(e.target.value)}
-              placeholder="가본 사람만 아는 정보, 다음 운전자에게 도움이 될 한 마디"
-              rows={5}
-              className="border-stroke-soft focus:border-text-strong focus:ring-text-strong/20 placeholder:text-text-soft mt-3 w-full resize-none rounded-lg border bg-white px-3.5 py-3 text-sm leading-relaxed transition-shadow outline-none focus:ring-2"
-            />
-            <p
-              className={`mt-1.5 text-right text-xs tabular-nums ${vm.remainingChars < 50 ? 'text-negative-600' : 'text-text-soft'}`}
-            >
-              {vm.content.length} / {vm.contentMaxLength}
-            </p>
-          </section>
+          <hr className="receipt__hr" />
+
+          {/* Visit detail rows */}
+          <div className="receipt__row">
+            <span className="receipt__row-label">Date</span>
+            <span className="receipt__row-value">{exitDate}</span>
+          </div>
+          <div className="receipt__row">
+            <span className="receipt__row-label">Time</span>
+            <span className="receipt__row-value">
+              {enterT} → {exitT}
+            </span>
+          </div>
+          <div className="receipt__row">
+            <span className="receipt__row-label">Lot</span>
+            <span className="receipt__row-value">{verified.parkingLotName}</span>
+          </div>
+          <div className="receipt__row">
+            <span className="receipt__row-label">No.</span>
+            <span className="receipt__row-value">#{verified.paymentSeq}</span>
+          </div>
+
+          <hr className="receipt__hr" />
+
+          {/* Rating field */}
+          <div className="write-receipt__field">
+            <div className="write-receipt__field-head">
+              <span>
+                Rating
+                <span className="write-receipt__field-req">필수</span>
+              </span>
+              <span className="write-receipt__field-hint">전체 만족도</span>
+            </div>
+            <div className="write-receipt__stars" onMouseLeave={() => setHover(0)}>
+              {[1, 2, 3, 4, 5].map((n) => (
+                <svg
+                  key={n}
+                  className="write-receipt__star"
+                  data-on={ratingDisplay >= n}
+                  viewBox="0 0 24 24"
+                  fill={ratingDisplay >= n ? 'currentColor' : 'none'}
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  onMouseEnter={() => setHover(n)}
+                  onClick={() => vm.setRating(n)}
+                >
+                  <path
+                    d="M12 2.5l2.95 6.5 7.05.8-5.3 4.8 1.55 7.1L12 18l-6.25 3.7L7.3 14.6 2 9.8l7.05-.8z"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              ))}
+            </div>
+            <div className="write-receipt__rating-label">
+              {vm.rating ? `${vm.rating}.0 / 5 · ${RATING_LABELS[vm.rating]}` : '별점을 선택하세요'}
+            </div>
+          </div>
+
+          <hr className="receipt__hr" />
+
+          {/* Tags field */}
+          <div className="write-receipt__field">
+            <div className="write-receipt__field-head">
+              <span>Tags</span>
+              <span className="write-receipt__field-hint">복수 선택 · 선택사항</span>
+            </div>
+            <div className="write-receipt__tags">
+              {TAGS.map((t) => (
+                <button
+                  key={t.key}
+                  type="button"
+                  className="write-receipt__tag"
+                  data-sentiment={t.sentiment}
+                  data-active={vm.tags.includes(t.key)}
+                  onClick={() => vm.toggleTag(t.key)}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <hr className="receipt__hr" />
+
+          {/* Signature / comment */}
+          <div className="write-receipt__field">
+            <div className="write-receipt__field-head">
+              <span>Signature</span>
+              <span className="write-receipt__field-hint">최대 {vm.contentMaxLength}자 · 선택사항</span>
+            </div>
+            <div className="write-receipt__signature">
+              <textarea
+                className="write-receipt__signature-area"
+                value={vm.content}
+                onChange={(e) => vm.updateContent(e.target.value)}
+                placeholder="이곳에 서명하듯 후기를 남겨주세요. 직접 겪은 점만 적어주세요."
+              />
+              <div className="write-receipt__signature-foot" data-warn={vm.remainingChars < 50}>
+                <span className="write-receipt__signature-hint">+ 서명하기</span>
+                <span>
+                  {vm.content.length} / {vm.contentMaxLength}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <hr className="receipt__hr" />
+
+          {/* Totals */}
+          <div className="receipt__row">
+            <span className="receipt__row-label">Auth</span>
+            <span className="receipt__row-value">{carHashShort}</span>
+          </div>
+          <div className="receipt__row receipt__row--bold">
+            <span className="receipt__row-label">Status</span>
+            <span className="receipt__row-value" style={{ color: 'var(--color-accent-700)' }}>
+              ✓ VERIFIED
+            </span>
+          </div>
+          <div className="receipt__row">
+            <span className="receipt__row-label">Active</span>
+            <span className="receipt__row-value">{durLabel}</span>
+          </div>
+
+          <hr className="receipt__hr" />
 
           {vm.submitError && (
-            <div className="bg-negative-50 text-negative-700 ring-negative-100 rounded-lg px-4 py-3 text-sm ring-1">
-              {vm.submitError}
-            </div>
+            <div className="bg-negative-50 text-negative-700 mb-3 rounded px-3 py-2 text-xs">{vm.submitError}</div>
           )}
 
-          <div className="flex items-center gap-3">
+          {/* CTA */}
+          <div className="write-receipt__cta">
             <button
               type="button"
-              onClick={vm.cancel}
-              className="border-stroke-sub hover:bg-bg-soft text-text-sub flex-1 rounded-full border bg-white py-3.5 text-sm font-semibold transition-colors"
-              disabled={vm.submitting}
+              className="write-receipt__submit"
+              onClick={() => void vm.submit()}
+              disabled={vm.rating < 1 || vm.submitting}
             >
-              취소
+              {vm.submitting ? 'SAVING…' : vm.rating > 0 ? '후기 게시하기 →' : '★ 별점을 선택하세요'}
             </button>
-            <button
-              type="submit"
-              disabled={vm.submitting || vm.rating < 1}
-              className="bg-brand-500 hover:bg-brand-700 active:bg-brand-900 disabled:bg-bg-sub disabled:text-text-disabled flex-[2] rounded-full py-3.5 text-sm font-semibold text-white transition-colors disabled:cursor-not-allowed"
-            >
-              {vm.submitting ? '등록 중...' : '후기 남기기'}
+            <button type="button" className="write-receipt__cancel" onClick={vm.cancel}>
+              ← 취소하고 돌아가기
             </button>
           </div>
-        </div>
-      </form>
+
+          {/* Barcode */}
+          <div className="receipt__barcode">
+            <div className="receipt__barcode-bars" aria-hidden />
+            <div className="receipt__barcode-code">{barcodeText}</div>
+          </div>
+
+          <hr className="receipt__hr" />
+
+          <div className="receipt__thanks">thank you for your trace.</div>
+          <div className="receipt__copy">retain this copy for your records</div>
+          <div className="receipt__footnote">made by modu / trace.modu.kr</div>
+
+          <div className="write-receipt__notice">
+            ※ 게시 후 24시간 내에만 수정·삭제 가능 · 동일 주차장 24시간 1회 제한
+            <br />※ 차량번호는 SHA256 해시되어 저장되며 역추적할 수 없습니다
+          </div>
+        </article>
+      </div>
     </main>
   )
 }

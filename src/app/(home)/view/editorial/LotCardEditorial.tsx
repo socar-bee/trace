@@ -1,7 +1,5 @@
 import Link from 'next/link'
 
-import { IcoStar } from '@/shared/components/icons'
-
 import type { PopularParkingLot } from '@/shared/types/trace'
 
 interface LotCardEditorialProps {
@@ -10,59 +8,63 @@ interface LotCardEditorialProps {
 }
 
 export default function LotCardEditorial({ lot, rank }: LotCardEditorialProps) {
-  const isCold = !lot.hot
+  const filled = Math.round(lot.avgRating)
+  const stars = '★★★★★'.slice(0, filled)
+  const starsOff = '★★★★★'.slice(filled)
+  const code = `P${lot.seq}.${String(lot.totalReviewCount).padStart(4, '0')}`
+
   return (
-    <Link
-      href={`/p/${lot.seq}`}
-      className="border-line bg-bg hover:border-accent group relative flex cursor-pointer flex-col gap-3 rounded-xl border p-[18px] transition-all hover:-translate-y-px hover:shadow-[var(--shadow-02)]"
-    >
-      {/* pulse dot */}
-      <span
-        aria-hidden
-        className={`absolute top-4 right-4 size-1.5 rounded-full ${
-          isCold ? 'bg-fg-4' : 'animate-[pulse-dot_2s_ease-in-out_infinite] bg-[var(--color-accent-500)]'
-        }`}
-      />
-
-      {/* rank · area */}
-      <div className="text-fg-3 font-mono text-[11px]">
-        <b className="text-accent font-medium">#{String(rank).padStart(2, '0')}</b> · {lot.areaLabel ?? '—'}
-      </div>
-
-      <div>
-        <div className="text-fg text-[17px] leading-snug font-semibold tracking-[-0.015em]">{lot.name}</div>
-        <div className="text-fg-3 mt-1 flex items-center gap-1.5 text-[12px]">
-          <span className="bg-fg-3 inline-block h-px w-2" aria-hidden />
-          {lot.address}
+    <Link href={`/p/${lot.seq}`} className="lot-receipt">
+      <div className="lot-receipt__head">
+        <div className="lot-receipt__name">{lot.name}</div>
+        <div className="lot-receipt__sub">
+          {lot.areaLabel ?? '—'} · NO.{String(rank).padStart(2, '0')}
         </div>
       </div>
 
-      <div className="border-line text-fg-3 mt-auto flex flex-wrap items-center gap-3 border-t border-dashed pt-3 font-mono text-[11px]">
-        <span className="inline-flex items-center gap-px" aria-label={`별점 ${lot.avgRating} / 5`}>
-          {[1, 2, 3, 4, 5].map((n) => {
-            const on = n <= Math.round(lot.avgRating)
-            return (
-              <IcoStar
-                key={n}
-                width={12}
-                height={12}
-                filled={on}
-                className={on ? 'text-[var(--color-star)]' : 'text-fg-4'}
-              />
-            )
-          })}
-        </span>
-        <span className="whitespace-nowrap">
-          <b className="text-fg mr-1 font-medium">{lot.avgRating.toFixed(1)}</b>
-        </span>
-        <span className="whitespace-nowrap">
-          <b className="text-fg mr-1 font-medium">{lot.totalReviewCount}</b>후기
-        </span>
-        {lot.revisitRatePct != null && (
-          <span className="whitespace-nowrap">
-            <b className="text-fg mr-1 font-medium">{lot.revisitRatePct}%</b>재방문
+      <hr className="lot-receipt__divider" />
+
+      <div className="lot-receipt__rows">
+        <div className="lot-receipt__row">
+          <span className="lot-receipt__row-label">Rate</span>
+          <span className="lot-receipt__row-leader" aria-hidden />
+          <span className="lot-receipt__row-value">
+            <span className="lot-receipt__stars">{stars}</span>
+            <span className="lot-receipt__stars-off">{starsOff}</span>
+            {'  '}
+            {lot.avgRating.toFixed(1)}
           </span>
+        </div>
+        <div className="lot-receipt__row">
+          <span className="lot-receipt__row-label">Logs</span>
+          <span className="lot-receipt__row-leader" aria-hidden />
+          <span className="lot-receipt__row-value">{lot.totalReviewCount}</span>
+        </div>
+        {lot.revisitRatePct != null && (
+          <div className="lot-receipt__row">
+            <span className="lot-receipt__row-label">Again</span>
+            <span className="lot-receipt__row-leader" aria-hidden />
+            <span className="lot-receipt__row-value">{lot.revisitRatePct}%</span>
+          </div>
         )}
+        {lot.pricePer != null && (
+          <div className="lot-receipt__row lot-receipt__row--bold">
+            <span className="lot-receipt__row-label">Rate/{lot.priceUnit ?? '10분'}</span>
+            <span className="lot-receipt__row-leader" aria-hidden />
+            <span className="lot-receipt__row-value">₩{lot.pricePer.toLocaleString('ko-KR')}</span>
+          </div>
+        )}
+      </div>
+
+      <hr className="lot-receipt__divider" />
+
+      <div className={`lot-receipt__status ${lot.hot ? 'lot-receipt__status--hot' : ''}`}>
+        {lot.hot ? '● ACTIVE · 이번 주 후기 多' : 'OPEN · 첫 후기 대기'}
+      </div>
+
+      <div className="lot-receipt__barcode">
+        <div className="lot-receipt__barcode-bars" aria-hidden />
+        <div className="lot-receipt__barcode-code">{code}</div>
       </div>
     </Link>
   )
