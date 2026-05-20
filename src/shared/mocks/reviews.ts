@@ -79,7 +79,22 @@ function generateReviewsFor(parkingLotSeq: string, count: number, daysSpread: nu
   return reviews.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
 }
 
+// 새 ParkingLot seq(1024 ~ 1199)에 맞춘 review count.
+// 디자인 시안의 totalCount 값을 직접 반영해서 카드·통계가 자연스럽게 채워지도록.
 const REVIEW_COUNT_BY_SEQ: Record<string, number> = {
+  '1024': 38, // 강남 N타워 (시안 187 → 18 cap 적용)
+  '1037': 28, // 홍대입구 공영
+  '1052': 22, // 성수 연무장길
+  '1071': 45, // 잠실 롯데 P3 (가장 많음)
+  '1083': 32, // 여의도 IFC
+  '1099': 24, // 판교 H스퀘어
+  '1112': 14, // 연남동 새마을
+  '1125': 18, // 성수 디뮤지엄
+  '1142': 36, // 잠실 종합운동장
+  '1156': 26, // 강남 GT타워
+  '1178': 30, // 여의도 더현대
+  '1199': 20, // 판교 알파돔시티
+  // 후방 호환 (혹시 기존 seq 참조하는 곳)
   '101': 28,
   '102': 14,
   '103': 9,
@@ -114,4 +129,9 @@ export function getReviewsBySeq(parkingLotSeq: string): Review[] {
 export function getWeeklyNewReviewCount(parkingLotSeq: string): number {
   const oneWeekAgo = Date.now() - 7 * 86_400_000
   return getReviewsBySeq(parkingLotSeq).filter((r) => new Date(r.createdAt).getTime() >= oneWeekAgo).length
+}
+
+export function getRecentReviewCount(parkingLotSeq: string, hoursAgo: number): number {
+  const since = Date.now() - hoursAgo * 3600_000
+  return getReviewsBySeq(parkingLotSeq).filter((r) => new Date(r.createdAt).getTime() >= since).length
 }

@@ -9,8 +9,8 @@ import { IcoHome, IcoSearch, IcoUser, IcoWrite } from '@/shared/components/icons
 const NAV_ITEMS = [
   { label: '홈', href: '/', icon: IcoHome, match: (p: string) => p === '/' },
   { label: '검색', href: '/search', icon: IcoSearch, match: (p: string) => p.startsWith('/search') },
-  { label: '기록', href: '/write', icon: IcoWrite, match: (p: string) => p.startsWith('/write') },
-  { label: '내 흔적', href: '/me/traces', icon: IcoUser, match: (p: string) => p.startsWith('/me') }
+  { label: '후기', href: '/write', icon: IcoWrite, match: (p: string) => p.startsWith('/write') },
+  { label: '내 후기', href: '/me/traces', icon: IcoUser, match: (p: string) => p.startsWith('/me') }
 ] as const
 
 export default function DockBar() {

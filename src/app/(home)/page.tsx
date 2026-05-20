@@ -6,7 +6,7 @@ import { META_KEYWORDS } from '@/shared/lib/seo'
 
 import type { Metadata } from 'next'
 
-import { fetchPopularParkingLots } from '@/shared/mocks/api'
+import { fetchLiveActivities, fetchPopularParkingLots, fetchTotalStats } from '@/shared/mocks/api'
 
 import HomeView from './view/HomeView'
 
@@ -19,12 +19,18 @@ export const metadata: Metadata = {
 export const revalidate = 600
 
 export default async function HomePage() {
-  const popular = await fetchPopularParkingLots(8)
+  const [lots, stats, activities] = await Promise.all([
+    fetchPopularParkingLots(12),
+    fetchTotalStats(),
+    fetchLiveActivities(10)
+  ])
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <AppHeader showSearch={false} />
-      <HomeView popular={popular} />
+      <AppHeader showSearch />
+      <main className="flex-1">
+        <HomeView lots={lots} stats={stats} activities={activities} />
+      </main>
       <AppFooter />
     </div>
   )

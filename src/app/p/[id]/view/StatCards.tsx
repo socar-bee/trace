@@ -1,5 +1,3 @@
-import { StarRatingDisplay } from '@/shared/components/ui/StarRating'
-
 import { formatRating, formatRevisitRate } from '@/shared/lib/format'
 
 import type { ParkingLotStats } from '@/shared/types/trace'
@@ -13,28 +11,31 @@ export default function StatCards({ stats }: StatCardsProps) {
     {
       label: '평균 별점',
       value: stats.totalReviewCount > 0 ? formatRating(stats.avgRating) : '-',
-      sub: stats.totalReviewCount > 0 ? <StarRatingDisplay value={stats.avgRating} size={12} /> : null
+      unit: stats.totalReviewCount > 0 ? '/5' : ''
     },
     {
-      label: '총 흔적',
+      label: '총 후기',
       value: stats.totalReviewCount.toString(),
-      sub: <span className="text-text-soft text-xs">건</span>
+      unit: '건'
     },
     {
       label: '재방문율',
       value: stats.totalReviewCount > 0 ? formatRevisitRate(stats.revisitRate) : '-',
-      sub: null
+      unit: ''
     }
   ]
 
   return (
-    <div className="grid grid-cols-3 gap-2">
-      {items.map((item) => (
-        <div key={item.label} className="border-stroke-soft rounded-xl border bg-white p-3 md:p-4">
-          <p className="text-text-soft text-xs font-medium md:text-sm">{item.label}</p>
-          <p className="text-text-strong mt-1 flex items-baseline gap-1.5 text-xl font-bold tabular-nums md:mt-2 md:text-2xl">
+    <div className="border-line bg-bg mb-6 grid grid-cols-3 overflow-hidden rounded-xl border">
+      {items.map((item, i) => (
+        <div
+          key={item.label}
+          className={`px-3.5 py-4 md:px-4 md:py-5 ${i < items.length - 1 ? 'border-line border-r' : ''}`}
+        >
+          <p className="text-fg-3 mb-1.5 font-mono text-[9px] tracking-[0.05em] uppercase">{item.label}</p>
+          <p className="text-fg flex items-baseline gap-1 text-[22px] font-bold tracking-[-0.025em] tabular-nums md:text-2xl">
             {item.value}
-            {item.sub}
+            {item.unit && <span className="text-fg-3 font-mono text-[11px] font-normal">{item.unit}</span>}
           </p>
         </div>
       ))}

@@ -33,8 +33,8 @@ export default function ReportDialog({ target, onClose }: ReportDialogProps) {
       <div className="w-full max-w-sm rounded-t-2xl bg-white p-5 md:rounded-2xl">
         <div className="flex items-start justify-between">
           <div>
-            <h3 className="text-text-strong text-lg font-bold">흔적 신고</h3>
-            <p className="text-text-soft mt-1 text-xs">{target.nickname}님의 흔적을 신고합니다</p>
+            <h3 className="text-text-strong text-lg font-bold">후기 신고</h3>
+            <p className="text-text-soft mt-1 text-xs">{target.nickname}님의 후기를 신고합니다</p>
           </div>
           <button type="button" onClick={onClose} aria-label="닫기" className="text-icon-soft -m-2 p-2">
             <IcoClose />
@@ -57,7 +57,7 @@ export default function ReportDialog({ target, onClose }: ReportDialogProps) {
                   >
                     <span
                       className={`size-4 rounded-full border-2 ${
-                        reason === r.key ? 'border-brand-900 bg-brand-900' : 'border-stroke-sub'
+                        reason === r.key ? 'border-brand-500 bg-brand-500' : 'border-stroke-sub'
                       }`}
                     />
                     {r.label}
@@ -70,7 +70,7 @@ export default function ReportDialog({ target, onClose }: ReportDialogProps) {
               type="button"
               onClick={onSubmit}
               disabled={!reason}
-              className="bg-brand-900 disabled:bg-bg-sub disabled:text-text-disabled mt-5 w-full rounded-full py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80"
+              className="bg-brand-500 hover:bg-brand-700 active:bg-brand-900 disabled:bg-bg-sub disabled:text-text-disabled mt-5 w-full rounded-full py-3.5 text-sm font-semibold text-white transition-colors disabled:cursor-not-allowed"
             >
               신고 접수
             </button>

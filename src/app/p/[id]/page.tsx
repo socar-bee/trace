@@ -30,8 +30,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const title = buildParkingLotTitle(detail.info.name)
   const desc =
     detail.stats.totalReviewCount > 0
-      ? `${detail.info.name} 흔적 ${detail.stats.totalReviewCount}건 · 평균 ${detail.stats.avgRating.toFixed(1)}점. 가본 사람의 진짜 후기를 Trace에서 확인하세요.`
-      : `${detail.info.name}의 첫 흔적을 남겨주세요. 주차권을 사용한 운전자만 글을 쓸 수 있는 익명 리뷰 플랫폼 Trace.`
+      ? `${detail.info.name} 후기 ${detail.stats.totalReviewCount}건 · 평균 ${detail.stats.avgRating.toFixed(1)}점. 가본 사람의 진짜 후기를 Trace에서 확인하세요.`
+      : `${detail.info.name}의 첫 후기를 남겨주세요. 주차권을 사용한 운전자만 글을 쓸 수 있는 익명 리뷰 플랫폼 Trace.`
 
   return {
     title,

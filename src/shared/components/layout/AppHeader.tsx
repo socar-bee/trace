@@ -1,11 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { IcoSearch, IcoUser } from '@/shared/components/icons'
+import { IcoLogout, IcoSearch, IcoUser } from '@/shared/components/icons'
 import Logo from '@/shared/components/ui/Logo'
+import SearchAutocomplete from '@/shared/components/ui/SearchAutocomplete'
+
+import { useAuthStore } from '@/shared/stores/authStore'
 
 interface AppHeaderProps {
   showSearch?: boolean
@@ -13,34 +15,28 @@ interface AppHeaderProps {
 }
 
 export default function AppHeader({ showSearch = true, initialKeyword = '' }: AppHeaderProps) {
-  const router = useRouter()
-  const [keyword, setKeyword] = useState(initialKeyword)
+  const [mounted, setMounted] = useState(false)
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    const k = keyword.trim()
-    if (!k) return
-    router.push(`/search?q=${encodeURIComponent(k)}`)
-  }
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true)
+  }, [])
+
+  const isLoggedIn = useAuthStore((s) => s.isLoggedIn)
+  const profile = useAuthStore((s) => s.profile)
+  const logout = useAuthStore((s) => s.logout)
 
   return (
-    <header className="border-stroke-soft bg-bg-white/95 sticky top-0 z-[var(--z-header)] border-b backdrop-blur supports-[backdrop-filter]:bg-white/80">
+    <header className="border-stroke-soft bg-bg-white/85 sticky top-0 z-[var(--z-header)] border-b backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-[1200px] items-center gap-3 px-4 md:h-16 md:px-6">
         <Logo size="md" showSubtitle />
 
         {showSearch && (
-          <form onSubmit={onSubmit} className="hidden flex-1 md:block">
-            <label className="bg-bg-soft hover:bg-bg-sub focus-within:ring-brand-900 mx-auto flex h-10 max-w-md items-center gap-2 rounded-full px-4 transition-colors focus-within:ring-1">
-              <IcoSearch className="text-icon-soft" />
-              <input
-                type="text"
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-                placeholder="주차장 이름·지역명 검색"
-                className="placeholder:text-text-soft text-text-strong flex-1 bg-transparent text-sm outline-none"
-              />
-            </label>
-          </form>
+          <div className="hidden flex-1 md:flex md:justify-center">
+            <div className="w-full max-w-md">
+              <SearchAutocomplete variant="header" initialKeyword={initialKeyword} placeholder="주차장·지역명 검색" />
+            </div>
+          </div>
         )}
 
         <div className="ml-auto flex items-center gap-1">
@@ -53,13 +49,33 @@ export default function AppHeader({ showSearch = true, initialKeyword = '' }: Ap
               <IcoSearch className="text-icon-strong" />
             </Link>
           )}
-          <Link
-            href="/me/traces"
-            className="text-text-strong hover:bg-bg-soft inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium"
-          >
-            <IcoUser className="text-icon-strong" />
-            <span className="hidden sm:inline">내 흔적</span>
-          </Link>
+
+          {mounted && isLoggedIn ? (
+            <>
+              <Link
+                href="/me/traces"
+                className="text-text-strong hover:bg-bg-soft hover:text-brand-700 inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold transition-colors"
+              >
+                <IcoUser className="size-[18px]" />
+                <span className="hidden sm:inline">{profile?.userName ?? '내 후기'}</span>
+              </Link>
+              <button
+                type="button"
+                onClick={logout}
+                aria-label="로그아웃"
+                className="text-text-soft hover:bg-bg-soft hover:text-text-strong hidden size-9 items-center justify-center rounded-full transition-colors sm:inline-flex"
+              >
+                <IcoLogout />
+              </button>
+            </>
+          ) : (
+            <Link
+              href="/login"
+              className="bg-brand-500 hover:bg-brand-700 active:bg-brand-900 text-static-white inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold transition-colors"
+            >
+              로그인
+            </Link>
+          )}
         </div>
       </div>
     </header>

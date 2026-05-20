@@ -11,5 +11,5 @@ export function removeOperatorPrefix(name: string) {
 
 export function buildParkingLotTitle(name: string) {
   const cleaned = removeOperatorPrefix(name)
-  return `${cleaned} 주차장 흔적 - Trace`
+  return `${cleaned} 주차장 후기 - Trace`
 }

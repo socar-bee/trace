@@ -7,8 +7,8 @@ import { DEMO_TOKEN_HINTS } from '@/shared/mocks/tokens'
 import WriteView from './view/WriteView'
 
 export const metadata: Metadata = {
-  title: '흔적 남기기',
-  description: '주차권 사용 후 익명으로 흔적을 남겨보세요.',
+  title: '후기 남기기',
+  description: '주차권 사용 후 익명으로 후기를 남겨보세요.',
   robots: { index: false, follow: false }
 }
 

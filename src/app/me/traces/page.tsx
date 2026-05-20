@@ -6,8 +6,8 @@ import type { Metadata } from 'next'
 import MyTracesView from './view/MyTracesView'
 
 export const metadata: Metadata = {
-  title: '내 흔적',
-  description: '내가 남긴 주차장 흔적 모음',
+  title: '내 후기',
+  description: '내가 남긴 주차장 후기 모음',
   robots: { index: false, follow: false }
 }
 

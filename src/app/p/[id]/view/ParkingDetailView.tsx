@@ -1,4 +1,5 @@
 import { IcoMapPin } from '@/shared/components/icons'
+import RecommendButtons from '@/shared/components/ui/RecommendButtons'
 
 import { formatPrice } from '@/shared/lib/format'
 
@@ -16,7 +17,7 @@ interface ParkingDetailViewProps {
 }
 
 export default function ParkingDetailView({ seq, initial }: ParkingDetailViewProps) {
-  const { info, stats, topTags, reviews, hasNext } = initial
+  const { info, stats, topTags, reviews, hasNext, recommend } = initial
 
   return (
     <main className="mx-auto w-full max-w-[1200px] flex-1 px-4 py-6 md:px-6 md:py-10">
@@ -38,13 +39,19 @@ export default function ParkingDetailView({ seq, initial }: ParkingDetailViewPro
           <MiniMap name={info.name} latitude={info.latitude} longitude={info.longitude} />
           <ExternalMapLinks name={info.name} latitude={info.latitude} longitude={info.longitude} />
           <StatCards stats={stats} />
+
+          <section>
+            <h2 className="text-text-strong mb-2.5 text-sm font-semibold">이 주차장 어때요?</h2>
+            <RecommendButtons parkingLotSeq={seq} baseUpCount={recommend.upCount} baseDownCount={recommend.downCount} />
+          </section>
+
           <section>
             <h2 className="text-text-strong mb-2.5 text-sm font-semibold">자주 언급된 태그</h2>
             <TagSummary topTags={topTags} />
           </section>
         </aside>
 
-        {/* 우측 흔적 리스트 */}
+        {/* 우측 후기 리스트 */}
         <section>
           <ReviewList seq={seq} initialReviews={reviews} initialHasNext={hasNext} totalCount={stats.totalReviewCount} />
         </section>

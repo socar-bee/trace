@@ -10,7 +10,7 @@ export default function NotFound() {
       </p>
       <Link
         href="/"
-        className="bg-brand-900 text-static-white inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-semibold transition-opacity hover:opacity-90 active:opacity-80"
+        className="bg-brand-500 hover:bg-brand-700 active:bg-brand-900 text-static-white inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-semibold transition-colors"
       >
         Trace 홈으로
       </Link>

@@ -8,7 +8,7 @@ interface TagSummaryProps {
 
 export default function TagSummary({ topTags }: TagSummaryProps) {
   if (topTags.length === 0) {
-    return <p className="text-text-soft text-sm">아직 태그가 없어요. 첫 흔적을 남기면 여기에 표시돼요.</p>
+    return <p className="text-text-soft text-sm">아직 태그가 없어요. 첫 후기를 남기면 여기에 표시돼요.</p>
   }
   return (
     <div className="flex flex-wrap gap-1.5">

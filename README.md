@@ -1,4 +1,4 @@
-# Trace · 주차장 흔적
+# Trace · 주차장 후기
 
 > 주차권을 사용한 운전자만 글을 쓸 수 있는 익명 주차장 리뷰 플랫폼.
 > SOCAR / 모두의주차장 본진과 분리된 별도 웹 자산. 도메인 `trace.modu.kr`.
@@ -26,8 +26,8 @@ pnpm format
 | --------------------- | ------------------------------------------------------ |
 | `/`                   | 메인 — 인기 주차장 + 지역 칩                           |
 | `/p/[id]`             | 주차장 상세 (SSR + JSON-LD Review schema)              |
-| `/write?token=xxx`    | 흔적 작성 (토큰 검증 / 별점 / 빠른 태그 / 자유 코멘트) |
-| `/me/traces`          | 내가 남긴 흔적 (localStorage 기반)                     |
+| `/write?token=xxx`    | 후기 작성 (토큰 검증 / 별점 / 빠른 태그 / 자유 코멘트) |
+| `/me/traces`          | 내가 남긴 후기 (localStorage 기반)                     |
 | `/search?q= / ?area=` | 검색 / 지역별                                          |
 
 ## 디렉토리 구조 (MVVM)
@@ -58,11 +58,11 @@ src/shared/
 | `verifyToken`             | `GET /api/trace/verify?token=`       |
 | `submitReview`            | `POST /api/trace/reviews`            |
 
-흔적 작성 토큰은 본진 결제 완료 후 `POST /api/trace/token`에서 발급 → 24시간 단기 JWT.
+후기 작성 토큰은 본진 결제 완료 후 `POST /api/trace/token`에서 발급 → 24시간 단기 JWT.
 
 ## 데모 진입
 
-백엔드 붙기 전 흔적 작성을 체험하려면 `/write` 진입 후 데모 토큰 클릭:
+백엔드 붙기 전 후기 작성을 체험하려면 `/write` 진입 후 데모 토큰 클릭:
 
 - `demo-101` 강남역 센터필드
 - `demo-201` 홍대입구 와이즈파크

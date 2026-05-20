@@ -1,14 +1,12 @@
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-
 import type { NextConfig } from 'next'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+// pnpm script 는 항상 package.json 위치에서 실행되므로 process.cwd() === trace 루트.
+// 형제 디렉토리(alopedia, modu-web)의 lockfile 때문에 Next/Turbopack 이
+// workspace root 를 한 단계 위(/Users/admin/Desktop)로 잘못 추정하는 것을 방지.
+const projectRoot = process.cwd()
 
 const nextConfig: NextConfig = {
-  // 형제 디렉토리(alopedia, modu-web 등)의 lockfile 때문에 Next/Turbopack 이
-  // workspace root 를 /Users/admin/Desktop 으로 잘못 추정하는 것을 방지.
-  outputFileTracingRoot: __dirname,
+  outputFileTracingRoot: projectRoot,
   allowedDevOrigins: ['*.ngrok-free.app', '*.ngrok.app', '*.ngrok.io'],
   images: {
     remotePatterns: [
@@ -33,7 +31,7 @@ const nextConfig: NextConfig = {
     removeConsole: process.env.APP_ENV === 'local' ? false : { exclude: ['error', 'warn'] }
   },
   turbopack: {
-    root: __dirname,
+    root: projectRoot,
     rules: {
       '*.svg': {
         loaders: ['@svgr/webpack'],
