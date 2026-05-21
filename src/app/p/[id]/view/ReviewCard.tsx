@@ -1,5 +1,6 @@
 'use client'
 
+import NickAvatar from '@/shared/components/ui/NickAvatar'
 import { StarRatingDisplay } from '@/shared/components/ui/StarRating'
 import TagPill from '@/shared/components/ui/Tag'
 
@@ -17,8 +18,8 @@ export default function ReviewCard({ review, onReport }: ReviewCardProps) {
     <article className="border-stroke-soft border-b py-5 last:border-b-0 md:py-6">
       <header className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <p className="text-text-strong text-sm font-semibold md:text-base">{review.nickname}</p>
-          <p className="text-text-soft mt-0.5 text-xs">
+          <NickAvatar nickname={review.nickname} style="initial" />
+          <p className="text-text-soft mt-1 text-xs">
             {formatVisitWindow(review.enterTime, review.exitTime)} · {formatRelativeTime(review.createdAt)}
           </p>
         </div>

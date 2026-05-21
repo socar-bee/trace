@@ -230,6 +230,20 @@ body {
   }
 }
 
+/* 별점 채움 애니메이션 — 0% → 100% → 0% loop */
+@keyframes star-fill {
+  0% {
+    width: 0%;
+  }
+  40%,
+  60% {
+    width: 100%;
+  }
+  100% {
+    width: 0%;
+  }
+}
+
 /* === Mini map dotted grid === */
 .minimap-grid {
   background-image:

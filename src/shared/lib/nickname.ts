@@ -41,3 +41,35 @@ export function generateNickname(carHash?: string): string {
   const num = 1000 + Math.floor(rng() * 9000)
   return `${color}${animal}${num}`
 }
+
+export interface ParsedNickname {
+  color: string
+  animal: string
+  num: number
+  full: string
+}
+
+export function parseNickname(nickname: string): ParsedNickname | null {
+  const color = COLORS.find((c) => nickname.startsWith(c))
+  if (!color) return null
+  const rest = nickname.slice(color.length)
+  const animal = ANIMALS.find((a) => rest.startsWith(a))
+  if (!animal) return null
+  const num = Number(rest.slice(animal.length))
+  if (!Number.isFinite(num)) return null
+  return { color, animal, num, full: nickname }
+}
+
+// 닉네임 컬러 풀의 hex 매핑 (NickAvatar의 'dot' 스타일에서 사용)
+export const NICK_COLOR_HEX: Record<string, string> = {
+  초록: '#3b7a4a',
+  파란: '#3a6db8',
+  빨간: '#b94a3c',
+  노란: '#c79a2b',
+  검은: '#1a1a1a',
+  하얀: '#dcd6c5',
+  보라: '#7a5a99',
+  회색: '#8a8680',
+  갈색: '#8a5a3b',
+  분홍: '#d68aa5'
+}

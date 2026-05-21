@@ -145,22 +145,30 @@ export default function WriteView({ token, demoTokens }: WriteViewProps) {
 
           {/* Visit detail rows */}
           <div className="receipt__row">
-            <span className="receipt__row-label">Date</span>
+            <span className="receipt__row-label">날짜</span>
             <span className="receipt__row-value">{exitDate}</span>
           </div>
           <div className="receipt__row">
-            <span className="receipt__row-label">Time</span>
+            <span className="receipt__row-label">시간</span>
             <span className="receipt__row-value">
               {enterT} → {exitT}
             </span>
           </div>
           <div className="receipt__row">
-            <span className="receipt__row-label">Lot</span>
-            <span className="receipt__row-value">{verified.parkingLotName}</span>
+            <span className="receipt__row-label">주차장</span>
+            <span className="receipt__row-value" style={{ color: 'var(--color-accent)' }}>
+              {verified.parkingLotName}
+            </span>
           </div>
           <div className="receipt__row">
-            <span className="receipt__row-label">No.</span>
-            <span className="receipt__row-value">#{verified.paymentSeq}</span>
+            <span className="receipt__row-label">결제</span>
+            <span className="receipt__row-value" style={{ color: 'var(--color-accent)' }}>
+              #{verified.paymentSeq}
+            </span>
+          </div>
+          <div className="receipt__row">
+            <span className="receipt__row-label">유형</span>
+            <span className="receipt__row-value">익명 후기 · 영수증 검증</span>
           </div>
 
           <hr className="receipt__hr" />
@@ -169,7 +177,7 @@ export default function WriteView({ token, demoTokens }: WriteViewProps) {
           <div className="write-receipt__field">
             <div className="write-receipt__field-head">
               <span>
-                Rating
+                별점
                 <span className="write-receipt__field-req">필수</span>
               </span>
               <span className="write-receipt__field-hint">전체 만족도</span>
@@ -204,7 +212,7 @@ export default function WriteView({ token, demoTokens }: WriteViewProps) {
           {/* Tags field */}
           <div className="write-receipt__field">
             <div className="write-receipt__field-head">
-              <span>Tags</span>
+              <span>태그</span>
               <span className="write-receipt__field-hint">복수 선택 · 선택사항</span>
             </div>
             <div className="write-receipt__tags">
@@ -228,7 +236,7 @@ export default function WriteView({ token, demoTokens }: WriteViewProps) {
           {/* Signature / comment */}
           <div className="write-receipt__field">
             <div className="write-receipt__field-head">
-              <span>Signature</span>
+              <span>한줄 후기</span>
               <span className="write-receipt__field-hint">최대 {vm.contentMaxLength}자 · 선택사항</span>
             </div>
             <div className="write-receipt__signature">
@@ -239,7 +247,7 @@ export default function WriteView({ token, demoTokens }: WriteViewProps) {
                 placeholder="이곳에 서명하듯 후기를 남겨주세요. 직접 겪은 점만 적어주세요."
               />
               <div className="write-receipt__signature-foot" data-warn={vm.remainingChars < 50}>
-                <span className="write-receipt__signature-hint">+ 서명하기</span>
+                <span className="write-receipt__signature-hint">+ 후기 남기기</span>
                 <span>
                   {vm.content.length} / {vm.contentMaxLength}
                 </span>
@@ -251,17 +259,17 @@ export default function WriteView({ token, demoTokens }: WriteViewProps) {
 
           {/* Totals */}
           <div className="receipt__row">
-            <span className="receipt__row-label">Auth</span>
+            <span className="receipt__row-label">인증</span>
             <span className="receipt__row-value">{carHashShort}</span>
           </div>
           <div className="receipt__row receipt__row--bold">
-            <span className="receipt__row-label">Status</span>
+            <span className="receipt__row-label">상태</span>
             <span className="receipt__row-value" style={{ color: 'var(--color-accent-700)' }}>
-              ✓ VERIFIED
+              ✓ 검증완료
             </span>
           </div>
           <div className="receipt__row">
-            <span className="receipt__row-label">Active</span>
+            <span className="receipt__row-label">이용시간</span>
             <span className="receipt__row-value">{durLabel}</span>
           </div>
 

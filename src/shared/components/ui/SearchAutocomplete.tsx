@@ -32,8 +32,9 @@ const STYLES: Record<AutocompleteVariant, { wrap: string; icon: string; input: s
       'bg-brand-500 hover:bg-brand-700 active:bg-brand-900 rounded-xl px-5 py-2.5 text-sm font-bold text-white transition-colors disabled:opacity-30'
   },
   header: {
-    wrap: 'h-10 rounded-full border border-line-2 px-4',
+    wrap: 'h-10 rounded-none border border-fg px-3.5 shadow-[2px_2px_0_var(--color-fg)]',
     icon: 'size-4',
+    // 16px 유지 — iOS Safari focus 시 zoom-in 방지
     input: 'text-[16px]'
   }
 }
@@ -151,7 +152,7 @@ export default function SearchAutocomplete({
       {isOpen && (showRecent || showResults) && (
         <div
           role="listbox"
-          className="border-stroke-sub absolute top-full right-0 left-0 z-50 mt-2 max-h-[min(560px,calc(100dvh-160px))] overflow-y-auto rounded-2xl border bg-white shadow-[var(--shadow-03)]"
+          className="border-fg bg-bg absolute top-full right-0 left-0 z-50 mt-1.5 max-h-[min(560px,calc(100dvh-160px))] overflow-y-auto border shadow-[3px_3px_0_var(--color-fg)]"
         >
           {/* 최근 검색 */}
           {showRecent && (

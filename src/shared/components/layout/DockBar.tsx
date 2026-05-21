@@ -13,9 +13,13 @@ const NAV_ITEMS = [
   { label: '내 후기', href: '/me/traces', icon: IcoUser, match: (p: string) => p.startsWith('/me') }
 ] as const
 
+// 인증·검증 흐름에서는 하단 dock을 가린다 — 풀스크린 layout과 충돌 + UX 상 네비 의미 없음.
+const HIDDEN_ROUTES = ['/login', '/signup', '/verify']
+
 export default function DockBar() {
   const pathname = usePathname()
   const navRef = useRef<HTMLElement>(null)
+  const isHidden = HIDDEN_ROUTES.some((r) => pathname.startsWith(r))
 
   // Why: 시트/오버레이가 dock 영역을 피해 깔리도록 dock 실측 높이를 :root 변수로 공유.
   useEffect(() => {
@@ -31,7 +35,9 @@ export default function DockBar() {
       observer.disconnect()
       document.documentElement.style.removeProperty('--dock-height')
     }
-  }, [])
+  }, [isHidden])
+
+  if (isHidden) return null
 
   return (
     <nav

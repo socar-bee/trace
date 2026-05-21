@@ -85,37 +85,43 @@ export default function SearchView(props: SearchViewProps) {
         </section>
       )}
 
-      {/* POI(장소) 결과 — 본진 검색 API */}
+      {/* POI(장소) 결과 — 클릭 시 모웹 /map?lat=&lng= 로 이동 */}
       {places.length > 0 && (
         <section className="mt-8 md:mt-10">
           <header className="mb-4 flex items-end justify-between">
             <h2 className="text-text-strong text-lg font-bold">장소</h2>
             <p className="text-text-soft text-xs tabular-nums">{places.length}개</p>
           </header>
-          <ul className="border-stroke-soft overflow-hidden rounded-2xl border bg-white">
-            {places.map((place, i) => (
-              <li key={`${place.latitude}-${place.longitude}-${i}`}>
-                <a
-                  href={`https://map.naver.com/v5/search/${encodeURIComponent(place.name)}?lng=${place.longitude}&lat=${place.latitude}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="border-stroke-soft hover:bg-bg-weak flex w-full items-center gap-3 border-t px-4 py-3.5 text-left transition-colors first:border-t-0"
-                >
-                  <span className="bg-bg-soft text-icon-sub inline-flex size-9 shrink-0 items-center justify-center rounded-full">
-                    <IcoMapPin className="size-4" />
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="text-text-strong block truncate text-sm font-semibold md:text-base">
-                      {place.name}
+          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-3">
+            {places.map((place, i) => {
+              const host = process.env.NEXT_PUBLIC_WEBAPP_HOST ?? ''
+              const href = `${host}/map?lat=${place.latitude}&lng=${place.longitude}`
+              return (
+                <li key={`${place.latitude}-${place.longitude}-${i}`}>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="border-line bg-bg hover:border-fg hover:bg-brand-50 group flex h-full w-full items-start gap-3 border px-4 py-3.5 text-left transition-colors"
+                  >
+                    <span className="border-line-2 bg-bg text-fg inline-flex size-9 shrink-0 items-center justify-center border">
+                      <IcoMapPin className="size-4" />
                     </span>
-                    <span className="text-text-soft block truncate text-xs">{place.address}</span>
-                  </span>
-                  <IcoExternal className="text-icon-soft size-4 shrink-0" />
-                </a>
-              </li>
-            ))}
+                    <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                      <span className="text-fg truncate text-sm font-bold tracking-tight md:text-[15px]">
+                        {place.name}
+                      </span>
+                      <span className="text-fg-3 truncate font-mono text-[11px]">{place.address}</span>
+                    </span>
+                    <IcoExternal className="text-fg-3 group-hover:text-accent size-3.5 shrink-0 self-center transition-colors" />
+                  </a>
+                </li>
+              )
+            })}
           </ul>
-          <p className="text-text-soft mt-2 text-xs">네이버 지도로 이동합니다.</p>
+          <p className="text-fg-3 mt-3 font-mono text-[11px] tracking-[0.06em] uppercase">
+            ↗ 모두의주차장 지도로 이동합니다
+          </p>
         </section>
       )}
 

@@ -1,35 +1,29 @@
 'use client'
 
-import type { LiveActivity, TotalStats } from '@/shared/mocks/api'
+import type { HotReviewToday, LiveActivity } from '@/shared/mocks/api'
 
 import type { PopularParkingLot } from '@/shared/types/trace'
 
 import ActivityTicker from './editorial/ActivityTicker'
-import AreaChips from './editorial/AreaChips'
 import DemoStrip from './editorial/DemoStrip'
 import HeroEditorial from './editorial/HeroEditorial'
+import HotReviewsSection from './editorial/HotReviewsSection'
 import HowItWorks from './editorial/HowItWorks'
 import LotsSection from './editorial/LotsSection'
 
 interface HomeViewProps {
   lots: PopularParkingLot[]
-  stats: TotalStats
   activities: LiveActivity[]
+  hotReviews: HotReviewToday[]
 }
 
-const VERIFIED_RATE = 87
-
-export default function HomeView({ lots, stats, activities }: HomeViewProps) {
+export default function HomeView({ lots, activities, hotReviews }: HomeViewProps) {
   return (
     <>
       <DemoStrip />
-      <HeroEditorial
-        totalReviews={stats.totalReviews}
-        totalLots={stats.totalParkingLots}
-        verifiedRate={VERIFIED_RATE}
-      />
+      <HeroEditorial compact />
       <ActivityTicker activities={activities} />
-      <AreaChips totalLots={lots.length} />
+      <HotReviewsSection reviews={hotReviews} />
       <LotsSection lots={lots} />
       <HowItWorks />
     </>

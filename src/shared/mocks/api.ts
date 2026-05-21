@@ -59,9 +59,12 @@ function buildPopularItem(lot: ParkingLot, opts: BuildItemOptions = {}): Popular
     name: lot.name,
     address: lot.address,
     areaKey: lot.areaKey,
+    areaLabel: lot.areaLabel,
+    hot: lot.hot,
     weeklyNewReviewCount: getWeeklyNewReviewCount(lot.seq),
     avgRating: stats.avgRating,
     totalReviewCount: stats.totalReviewCount,
+    revisitRatePct: Math.round(stats.revisitRate * 100),
     recommendUpCount: recommend.upCount,
     recommendDownCount: recommend.downCount,
     hotScore: opts.withHotScore ? getRecentReviewCount(lot.seq, opts.withHotScore) : undefined
@@ -87,6 +90,61 @@ export interface LiveActivity {
   parkingLotName: string
   rating: number
   createdAt: string
+}
+
+export interface HotReviewToday {
+  reviewId: string
+  parkingLotSeq: string
+  parkingLotName: string
+  areaLabel?: string
+  nickname: string
+  rating: number
+  content: string
+  tags: TagKey[]
+  createdAt: string
+  hoursAgo: number
+}
+
+/**
+ * 오늘 뜨거운 후기 — 최근 12시간 + body 15자 이상 + lot별 중복 제거.
+ * Home의 "오늘 뜨거운 후기" 4-card 그리드용.
+ */
+export async function fetchHotReviewsToday(limit = 4, hoursWindow = 12): Promise<HotReviewToday[]> {
+  const now = Date.now()
+  const windowMs = hoursWindow * 3600_000
+  const all: HotReviewToday[] = []
+  for (const lot of MOCK_PARKING_LOTS) {
+    const reviews = getReviewsBySeq(lot.seq)
+    for (const r of reviews) {
+      if (!r.content || r.content.length < 15) continue
+      const t = new Date(r.createdAt).getTime()
+      const delta = now - t
+      if (delta > windowMs) continue
+      all.push({
+        reviewId: r.id,
+        parkingLotSeq: lot.seq,
+        parkingLotName: lot.name,
+        areaLabel: lot.areaLabel,
+        nickname: r.nickname,
+        rating: r.rating,
+        content: r.content,
+        tags: r.tags,
+        createdAt: r.createdAt,
+        hoursAgo: Math.max(0, Math.round(delta / 3600_000))
+      })
+    }
+  }
+  // lot별 1개씩만, hoursAgo 오름차순
+  all.sort((a, b) => a.hoursAgo - b.hoursAgo)
+  const seen = new Set<string>()
+  const out: HotReviewToday[] = []
+  for (const r of all) {
+    if (seen.has(r.parkingLotSeq)) continue
+    seen.add(r.parkingLotSeq)
+    out.push(r)
+    if (out.length >= limit) break
+  }
+  return out
 }
 
 /**

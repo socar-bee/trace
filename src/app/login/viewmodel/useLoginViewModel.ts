@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
 import { loadKakaoSDK, loginWithKakao, loginWithNaver } from '@/shared/lib/oauth'
@@ -11,6 +11,8 @@ import { getProfile, login } from '../model'
 
 export function useLoginViewModel() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const returnTo = searchParams.get('return') ?? '/'
   const { setTokens, setProfile } = useAuthStore()
 
   const [showEmailForm, setShowEmailForm] = useState(false)
@@ -47,7 +49,7 @@ export function useLoginViewModel() {
         /* profile fetch 실패해도 로그인은 성공 */
       }
 
-      router.push('/')
+      router.push(returnTo)
     } catch {
       setError('이메일 또는 비밀번호가 올바르지 않습니다')
     } finally {

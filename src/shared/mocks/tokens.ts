@@ -58,7 +58,22 @@ const MOCK_TOKENS: Record<string, MockTokenRecord> = {
 }
 
 export function verifyMockToken(token: string, hasWritten: boolean): VerifyTokenResult {
-  const record = MOCK_TOKENS[token]
+  let record = MOCK_TOKENS[token]
+
+  // Fallback: detail 페이지에서 클릭으로 진입하는 demo-{seq} 패턴을 동적으로 받아준다.
+  if (!record && token.startsWith('demo-')) {
+    const seq = token.slice('demo-'.length)
+    if (findParkingLotBySeq(seq)) {
+      record = {
+        paymentSeq: `P${seq}DEMO`,
+        parkingLotSeq: seq,
+        carHash: `hash-demo-${seq}`,
+        enterTime: FOUR_HOURS_AGO,
+        exitTime: TWO_HOURS_AGO
+      }
+    }
+  }
+
   if (!record) return { valid: false, reason: 'invalid' }
   if (record.expired) return { valid: false, reason: 'expired' }
   if (hasWritten) return { valid: false, reason: 'already_written' }

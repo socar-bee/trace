@@ -41,6 +41,7 @@ src/app/<route>/
 | 04  | [docs/04-reservation-flow.md](./docs/04-reservation-flow.md) | 제휴주차장 예매 플로우, ticket list/detail, ParkingDetailSheet 스크롤-스파이                   |
 | 05  | [docs/05-ui-patterns.md](./docs/05-ui-patterns.md)           | AnimationSheet 3-snap, DockBar/아이콘, **hydration 안전 패턴**, Lottie 로더                    |
 | 06  | [docs/06-conventions.md](./docs/06-conventions.md)           | 네이밍/import 순서/커밋 스타일/ESLint·Prettier                                                 |
+| 07  | [docs/07-design-system.md](./docs/07-design-system.md)       | 핸드오프 디자인 명세 (토큰·컴포넌트·라우트·인터랙션) + 정통 ↔ 픽셀 변종 비교                   |
 
 ## 핵심 함정 모음 (긴급 참고)
 
