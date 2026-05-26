@@ -3,6 +3,7 @@ import './globals.css'
 
 import { cookies } from 'next/headers'
 
+import DemoSwitcher from '@/shared/components/dev/DemoSwitcher'
 import DockBar from '@/shared/components/layout/DockBar'
 
 import { APP_DESCRIPTION, APP_HOST, APP_NAME, APP_TAGLINE } from '@/shared/lib/constants'
@@ -63,6 +64,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       >
         <QueryProvider>{children}</QueryProvider>
         {!fromApp && <DockBar />}
+        {process.env.NODE_ENV !== 'production' && <DemoSwitcher />}
       </body>
     </html>
   )
