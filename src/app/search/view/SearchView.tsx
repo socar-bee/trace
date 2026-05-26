@@ -1,7 +1,8 @@
 'use client'
 
-import { IcoClose, IcoExternal, IcoMapPin, IcoSearch } from '@/shared/components/icons'
-import ParkingCard from '@/shared/components/ui/ParkingCard'
+import Link from 'next/link'
+
+import { IcoChevronRight, IcoClose, IcoExternal, IcoMapPin, IcoSearch } from '@/shared/components/icons'
 
 import { isApiConfigured } from '@/shared/lib/apiClient'
 
@@ -17,14 +18,32 @@ export default function SearchView(props: SearchViewProps) {
   const { input, setInput, places, parkingLots, loading, submit, reset } = useSearchViewModel(props)
   const trimmed = input.trim()
 
-  const heading = trimmed.length >= 2 ? `'${trimmed}' 검색 결과` : '주차장 찾기'
+  const isResults = trimmed.length >= 2
 
   const showIdle = trimmed.length === 0
-  const showEmpty = !loading && trimmed.length >= 2 && places.length === 0 && parkingLots.length === 0
+  const showEmpty = !loading && isResults && places.length === 0 && parkingLots.length === 0
+  const totalHits = parkingLots.length + places.length
 
   return (
     <main className="mx-auto w-full max-w-[1200px] flex-1 px-4 py-6 md:px-6 md:py-10">
-      <h1 className="text-text-strong text-2xl font-bold md:text-3xl">{heading}</h1>
+      <div className="flex items-baseline gap-3">
+        <p className="text-fg-3 font-mono text-[11px] tracking-[0.18em] uppercase">
+          {isResults ? '검색 결과 · Search' : '검색 · Search'}
+        </p>
+        {isResults && !loading && (
+          <span className="text-fg-3 font-mono text-[11px] tabular-nums">— {totalHits} HITS</span>
+        )}
+      </div>
+      <h1 className="text-fg mt-1 text-2xl font-bold tracking-tight md:text-3xl">
+        {isResults ? (
+          <>
+            <span className="text-accent">‘{trimmed}’</span>
+            <span className="text-fg-2"> 검색 결과</span>
+          </>
+        ) : (
+          '주차장 찾기'
+        )}
+      </h1>
 
       <form
         onSubmit={(e) => {
@@ -70,15 +89,17 @@ export default function SearchView(props: SearchViewProps) {
 
       {/* 주차장 결과 (Trace 핵심) */}
       {parkingLots.length > 0 && (
-        <section className="mt-6 md:mt-8">
-          <header className="mb-4 flex items-end justify-between">
-            <h2 className="text-text-strong text-lg font-bold">주차장</h2>
-            <p className="text-text-soft text-xs tabular-nums">{parkingLots.length}개</p>
+        <section className="mt-8 md:mt-10">
+          <header className="border-fg mb-3 flex items-baseline justify-between border-b pb-2">
+            <h2 className="text-fg font-mono text-[12px] font-semibold tracking-[0.14em] uppercase">
+              Parking <span className="text-fg-3">·</span> 주차장
+            </h2>
+            <p className="text-fg-3 font-mono text-[11px] tabular-nums">{parkingLots.length} HITS</p>
           </header>
-          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-3">
+          <ul className="divide-line border-line flex flex-col divide-y border-b">
             {parkingLots.map((p, i) => (
               <li key={p.seq}>
-                <ParkingCard data={p} index={i} />
+                <SearchParkingRow lot={p} index={i} />
               </li>
             ))}
           </ul>
@@ -87,12 +108,14 @@ export default function SearchView(props: SearchViewProps) {
 
       {/* POI(장소) 결과 — 클릭 시 모웹 /map?lat=&lng= 로 이동 */}
       {places.length > 0 && (
-        <section className="mt-8 md:mt-10">
-          <header className="mb-4 flex items-end justify-between">
-            <h2 className="text-text-strong text-lg font-bold">장소</h2>
-            <p className="text-text-soft text-xs tabular-nums">{places.length}개</p>
+        <section className="mt-10 md:mt-12">
+          <header className="border-fg mb-3 flex items-baseline justify-between border-b pb-2">
+            <h2 className="text-fg font-mono text-[12px] font-semibold tracking-[0.14em] uppercase">
+              Places <span className="text-fg-3">·</span> 장소
+            </h2>
+            <p className="text-fg-3 font-mono text-[11px] tabular-nums">{places.length} HITS</p>
           </header>
-          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-3">
+          <ul className="divide-line border-line flex flex-col divide-y border-b">
             {places.map((place, i) => {
               const host = process.env.NEXT_PUBLIC_WEBAPP_HOST ?? ''
               const href = `${host}/map?lat=${place.latitude}&lng=${place.longitude}`
@@ -102,18 +125,18 @@ export default function SearchView(props: SearchViewProps) {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="border-line bg-bg hover:border-fg hover:bg-brand-50 group flex h-full w-full items-start gap-3 border px-4 py-3.5 text-left transition-colors"
+                    className="group hover:bg-brand-50 flex w-full items-center gap-3 px-3 py-3 text-left transition-colors md:px-4 md:py-3.5"
                   >
-                    <span className="border-line-2 bg-bg text-fg inline-flex size-9 shrink-0 items-center justify-center border">
+                    <span className="text-fg-3 group-hover:text-accent shrink-0">
                       <IcoMapPin className="size-4" />
                     </span>
-                    <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-                      <span className="text-fg truncate text-sm font-bold tracking-tight md:text-[15px]">
+                    <span className="flex min-w-0 flex-1 items-baseline gap-3">
+                      <span className="text-fg truncate text-[14px] font-semibold tracking-tight md:text-[15px]">
                         {place.name}
                       </span>
                       <span className="text-fg-3 truncate font-mono text-[11px]">{place.address}</span>
                     </span>
-                    <IcoExternal className="text-fg-3 group-hover:text-accent size-3.5 shrink-0 self-center transition-colors" />
+                    <IcoExternal className="text-fg-4 group-hover:text-accent size-3.5 shrink-0 transition-colors" />
                   </a>
                 </li>
               )
@@ -143,5 +166,67 @@ export default function SearchView(props: SearchViewProps) {
         </div>
       )}
     </main>
+  )
+}
+
+function SearchParkingRow({ lot, index }: { lot: PopularParkingLot; index: number }) {
+  const stagger = Math.min(index * 28, 240)
+  const fillPct = (Math.max(0, Math.min(5, lot.avgRating)) / 5) * 100
+  const hasReviews = lot.totalReviewCount > 0
+  const code = `P${lot.seq}.${String(lot.totalReviewCount).padStart(4, '0')}`
+
+  return (
+    <Link
+      href={`/p/${lot.seq}`}
+      className="group hover:bg-brand-50 flex w-full flex-col gap-1.5 px-3 py-3.5 transition-colors motion-safe:animate-[fadeUp_0.45s_ease-out_both] md:grid md:grid-cols-[minmax(0,1fr)_auto_16px] md:items-center md:gap-x-5 md:px-4 md:py-4"
+      style={{ animationDelay: `${stagger}ms` }}
+    >
+      <span className="flex min-w-0 flex-col gap-0.5">
+        <span className="text-fg group-hover:text-brand-700 truncate text-[15px] font-bold tracking-tight transition-colors md:text-base">
+          {lot.name}
+        </span>
+        <span className="text-fg-3 flex items-center gap-1 truncate font-mono text-[11px]">
+          <IcoMapPin className="size-3 shrink-0" />
+          <span className="truncate">{lot.address}</span>
+          <span aria-hidden className="text-fg-4">
+            ·
+          </span>
+          <span className="tracking-[0.04em]">{code}</span>
+        </span>
+      </span>
+
+      <span className="flex items-center gap-3 whitespace-nowrap tabular-nums">
+        <span
+          className="relative inline-block text-[13px] leading-none"
+          aria-label={hasReviews ? `평균 별점 ${lot.avgRating.toFixed(1)}` : '후기 없음'}
+        >
+          <span className="text-fg-4">★★★★★</span>
+          <span
+            className="text-caution-500 absolute inset-y-0 left-0 overflow-hidden whitespace-nowrap"
+            style={{ width: `${fillPct}%` }}
+            aria-hidden
+          >
+            ★★★★★
+          </span>
+        </span>
+        <span className="text-fg text-[13px] font-bold tabular-nums">
+          {hasReviews ? lot.avgRating.toFixed(1) : '–'}
+        </span>
+        <span className="bg-line-2 hidden h-3 w-px sm:inline-block" aria-hidden />
+        <span className="text-fg-2 hidden font-mono text-[11px] sm:inline">
+          후기 <span className="text-fg font-semibold">{lot.totalReviewCount}</span>
+        </span>
+        {(lot.recommendUpCount ?? 0) > 0 && (
+          <>
+            <span className="bg-line-2 hidden h-3 w-px md:inline-block" aria-hidden />
+            <span className="text-accent-700 hidden font-mono text-[11px] font-semibold md:inline">
+              👍 {lot.recommendUpCount}
+            </span>
+          </>
+        )}
+      </span>
+
+      <IcoChevronRight className="text-fg-3 group-hover:text-accent hidden size-4 transition-transform group-hover:translate-x-1 md:inline" />
+    </Link>
   )
 }

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 
-import { IcoEmail, IcoKakao, IcoNaver, IcoTireMark } from '@/shared/components/icons'
+import { IcoEmail, IcoKakao, IcoNaver } from '@/shared/components/icons'
 
 import { useSignupViewModel } from '../viewmodel'
 
@@ -11,19 +11,23 @@ export default function SignupView() {
 
   return (
     <div className="bg-bg-white flex min-h-dvh w-full flex-col items-center justify-center px-6 py-12">
-      {/* Logo */}
-      <div className="flex flex-col items-center">
-        <span className="inline-flex items-baseline gap-1.5">
-          <span className="text-text-strong text-4xl font-black tracking-tighter">Trace</span>
-          <IcoTireMark className="text-brand-500 mb-1" width={32} height={9} />
+      {/* Logo — AppHeader 와 동일한 brand mark (square dot + offset shadow) */}
+      <Link href="/" className="flex flex-col items-center" aria-label="홈으로">
+        <span className="inline-flex items-baseline gap-2">
+          <span className="text-fg text-4xl font-black tracking-tighter">Trace</span>
+          <span
+            className="bg-accent inline-block size-3.5 self-center"
+            style={{ boxShadow: '3px 3px 0 var(--color-fg)' }}
+            aria-hidden
+          />
         </span>
         <p
-          className="text-text-sub mt-2 text-center"
+          className="text-text-sub mt-3 text-center"
           style={{ fontSize: 'var(--font-size-c2)', lineHeight: 'var(--font-size-c2--line-height)' }}
         >
           가본 사람만 남기는 진짜 주차장 후기
         </p>
-      </div>
+      </Link>
 
       {!vm.showEmailForm ? (
         <>
@@ -77,20 +81,14 @@ export default function SignupView() {
           </div>
 
           {/* Terms */}
-          <p
-            className="text-text-soft mt-6 max-w-[320px] text-center leading-[16px]"
-            style={{ fontSize: 'var(--font-size-c4)' }}
-          >
-            로그인·회원가입 시{' '}
-            <Link href="#" className="underline">
+          <div className="text-fg-3 mt-8 flex items-center gap-4 text-[11px]">
+            <Link href="#" className="hover:text-fg underline underline-offset-[3px] transition-colors">
               이용약관
-            </Link>{' '}
-            및{' '}
-            <Link href="#" className="underline">
+            </Link>
+            <Link href="#" className="hover:text-fg underline underline-offset-[3px] transition-colors">
               개인정보처리방침
             </Link>
-            에 동의하게 됩니다
-          </p>
+          </div>
         </>
       ) : (
         <>
