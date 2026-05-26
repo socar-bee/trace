@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useSyncExternalStore } from 'react'
 
-import { IcoSearch } from '@/shared/components/icons'
+import { IcoUser } from '@/shared/components/icons'
 import SearchAutocomplete from '@/shared/components/ui/SearchAutocomplete'
 
 import { useAuthStore } from '@/shared/stores/authStore'
@@ -48,16 +48,6 @@ export default function AppHeader({ showSearch = true, initialKeyword = '' }: Ap
 
         {/* Nav */}
         <nav className="ml-auto flex shrink-0 items-center gap-3 text-sm">
-          {showSearch && (
-            <Link
-              href="/search"
-              aria-label="검색"
-              className="hover:bg-bg-2 inline-flex size-9 items-center justify-center md:hidden"
-            >
-              <IcoSearch className="text-fg" />
-            </Link>
-          )}
-
           {hydrated && isLoggedIn ? (
             <>
               <Link
@@ -78,7 +68,18 @@ export default function AppHeader({ showSearch = true, initialKeyword = '' }: Ap
             </>
           ) : (
             <>
-              <Link href="/login" className="text-fg-2 hover:text-fg text-sm font-medium transition-colors">
+              {/* 모바일: 아이콘 / 데스크탑: 텍스트 — primary CTA 발견성을 위해 회원가입은 텍스트 유지 */}
+              <Link
+                href="/login"
+                aria-label="로그인"
+                className="hover:bg-bg-2 text-fg-2 hover:text-fg inline-flex size-9 items-center justify-center transition-colors md:hidden"
+              >
+                <IcoUser />
+              </Link>
+              <Link
+                href="/login"
+                className="text-fg-2 hover:text-fg hidden text-sm font-medium transition-colors md:inline"
+              >
                 로그인
               </Link>
               <Link
