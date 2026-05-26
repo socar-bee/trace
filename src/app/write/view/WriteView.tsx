@@ -11,6 +11,7 @@ import WriteError from './WriteError'
 
 interface WriteViewProps {
   token: string | null
+  editId: string | null
   demoTokens: { token: string; label: string }[]
 }
 
@@ -44,8 +45,8 @@ function durationMin(enterIso: string, exitIso: string) {
   }
 }
 
-export default function WriteView({ token, demoTokens }: WriteViewProps) {
-  const vm = useWriteViewModel({ token })
+export default function WriteView({ token, editId, demoTokens }: WriteViewProps) {
+  const vm = useWriteViewModel({ token, editId })
   const [hover, setHover] = useState(0)
 
   if (vm.status.kind === 'loading') {
@@ -110,40 +111,20 @@ export default function WriteView({ token, demoTokens }: WriteViewProps) {
               TRACE
               <span className="write-receipt__brand-dot" />
             </div>
-            <div className="write-receipt__sub">PARKING RECEIPT</div>
+            <div className="write-receipt__sub">{vm.isEdit ? 'PARKING RECEIPT · EDIT' : 'PARKING RECEIPT'}</div>
           </header>
 
           <hr className="receipt__hr" />
 
-          {/* Profile (avatar + identity) */}
-          <div className="write-receipt__profile">
-            <div className="write-receipt__avatar">
-              <span className="write-receipt__avatar-letter">{verified.nickname.slice(2, 3)}</span>
-              <span className="write-receipt__avatar-check">
-                <svg viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M3 8 L7 12 L13 4" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </span>
-            </div>
-            <div className="write-receipt__id">
-              <div className="write-receipt__id-row">
-                <span className="write-receipt__id-label">닉네임</span>
-                <span className="write-receipt__id-val write-receipt__id-val--bold">{verified.nickname}</span>
-              </div>
-              <div className="write-receipt__id-row">
-                <span className="write-receipt__id-label">차량</span>
-                <span className="write-receipt__id-val">{carHashShort}</span>
-              </div>
-              <div className="write-receipt__id-row">
-                <span className="write-receipt__id-label">결제</span>
-                <span className="write-receipt__id-val">{verified.paymentSeq}</span>
-              </div>
-            </div>
+          {/* Visit detail rows — 영수증 본문 */}
+          <div className="receipt__row">
+            <span className="receipt__row-label">닉네임</span>
+            <span className="receipt__row-value">{verified.nickname}</span>
           </div>
-
-          <hr className="receipt__hr" />
-
-          {/* Visit detail rows */}
+          <div className="receipt__row">
+            <span className="receipt__row-label">차량</span>
+            <span className="receipt__row-value">{carHashShort}</span>
+          </div>
           <div className="receipt__row">
             <span className="receipt__row-label">날짜</span>
             <span className="receipt__row-value">{exitDate}</span>
@@ -162,13 +143,7 @@ export default function WriteView({ token, demoTokens }: WriteViewProps) {
           </div>
           <div className="receipt__row">
             <span className="receipt__row-label">결제</span>
-            <span className="receipt__row-value" style={{ color: 'var(--color-accent)' }}>
-              #{verified.paymentSeq}
-            </span>
-          </div>
-          <div className="receipt__row">
-            <span className="receipt__row-label">유형</span>
-            <span className="receipt__row-value">익명 후기 · 영수증 검증</span>
+            <span className="receipt__row-value">#{verified.paymentSeq}</span>
           </div>
 
           <hr className="receipt__hr" />
@@ -207,8 +182,6 @@ export default function WriteView({ token, demoTokens }: WriteViewProps) {
             </div>
           </div>
 
-          <hr className="receipt__hr" />
-
           {/* Tags field */}
           <div className="write-receipt__field">
             <div className="write-receipt__field-head">
@@ -231,8 +204,6 @@ export default function WriteView({ token, demoTokens }: WriteViewProps) {
             </div>
           </div>
 
-          <hr className="receipt__hr" />
-
           {/* Signature / comment */}
           <div className="write-receipt__field">
             <div className="write-receipt__field-head">
@@ -247,7 +218,7 @@ export default function WriteView({ token, demoTokens }: WriteViewProps) {
                 placeholder="이곳에 서명하듯 후기를 남겨주세요. 직접 겪은 점만 적어주세요."
               />
               <div className="write-receipt__signature-foot" data-warn={vm.remainingChars < 50}>
-                <span className="write-receipt__signature-hint">+ 후기 남기기</span>
+                <span className="write-receipt__signature-hint">익명 영수증 후기</span>
                 <span>
                   {vm.content.length} / {vm.contentMaxLength}
                 </span>
@@ -257,15 +228,11 @@ export default function WriteView({ token, demoTokens }: WriteViewProps) {
 
           <hr className="receipt__hr" />
 
-          {/* Totals */}
-          <div className="receipt__row">
-            <span className="receipt__row-label">인증</span>
-            <span className="receipt__row-value">{carHashShort}</span>
-          </div>
+          {/* Summary row — 검증 + 이용시간 */}
           <div className="receipt__row receipt__row--bold">
-            <span className="receipt__row-label">상태</span>
+            <span className="receipt__row-label">검증</span>
             <span className="receipt__row-value" style={{ color: 'var(--color-accent-700)' }}>
-              ✓ 검증완료
+              ✓ 영수증 검증완료
             </span>
           </div>
           <div className="receipt__row">
@@ -287,7 +254,13 @@ export default function WriteView({ token, demoTokens }: WriteViewProps) {
               onClick={() => void vm.submit()}
               disabled={vm.rating < 1 || vm.submitting}
             >
-              {vm.submitting ? 'SAVING…' : vm.rating > 0 ? '후기 게시하기 →' : '★ 별점을 선택하세요'}
+              {vm.submitting
+                ? 'SAVING…'
+                : vm.rating > 0
+                  ? vm.isEdit
+                    ? '후기 수정 저장 →'
+                    : '후기 게시하기 →'
+                  : '★ 별점을 선택하세요'}
             </button>
             <button type="button" className="write-receipt__cancel" onClick={vm.cancel}>
               ← 취소하고 돌아가기
@@ -300,15 +273,11 @@ export default function WriteView({ token, demoTokens }: WriteViewProps) {
             <div className="receipt__barcode-code">{barcodeText}</div>
           </div>
 
-          <hr className="receipt__hr" />
-
           <div className="receipt__thanks">thank you for your trace.</div>
-          <div className="receipt__copy">retain this copy for your records</div>
-          <div className="receipt__footnote">made by modu / trace.modu.kr</div>
+          <div className="receipt__footnote">trace.modu.kr · retain this copy</div>
 
           <div className="write-receipt__notice">
-            ※ 게시 후 24시간 내에만 수정·삭제 가능 · 동일 주차장 24시간 1회 제한
-            <br />※ 차량번호는 SHA256 해시되어 저장되며 역추적할 수 없습니다
+            게시 후 24시간 내 수정·삭제 가능 · 동일 주차장 24시간 1회 제한 · 차량번호는 SHA256 해시되어 역추적 불가
           </div>
         </article>
       </div>

@@ -13,16 +13,16 @@ export const metadata: Metadata = {
 }
 
 interface PageProps {
-  searchParams: Promise<{ token?: string }>
+  searchParams: Promise<{ token?: string; edit?: string }>
 }
 
 export default async function WritePage({ searchParams }: PageProps) {
-  const { token } = await searchParams
+  const { token, edit } = await searchParams
 
   return (
     <div className="bg-bg-weak flex min-h-dvh flex-col">
       <AppHeader showSearch={false} />
-      <WriteView token={token ?? null} demoTokens={DEMO_TOKEN_HINTS} />
+      <WriteView token={token ?? null} editId={edit ?? null} demoTokens={DEMO_TOKEN_HINTS} />
     </div>
   )
 }
