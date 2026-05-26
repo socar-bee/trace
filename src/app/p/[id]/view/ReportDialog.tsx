@@ -29,54 +29,82 @@ export default function ReportDialog({ target, onClose }: ReportDialogProps) {
   }
 
   return (
-    <div className="fixed inset-0 z-[var(--z-modal)] flex items-end justify-center bg-black/40 p-0 md:items-center md:p-4">
-      <div className="w-full max-w-sm rounded-t-2xl bg-white p-5 md:rounded-2xl">
-        <div className="flex items-start justify-between">
-          <div>
-            <h3 className="text-text-strong text-lg font-bold">후기 신고</h3>
-            <p className="text-text-soft mt-1 text-xs">{target.nickname}님의 후기를 신고합니다</p>
+    <div className="report-receipt-overlay" role="dialog" aria-modal="true" aria-labelledby="report-receipt-title">
+      <button type="button" aria-label="배경 클릭으로 닫기" className="report-receipt-scrim" onClick={onClose} />
+      <article className="report-receipt">
+        <header className="report-receipt__head">
+          <div className="report-receipt__brand">
+            REPORT
+            <span className="report-receipt__brand-dot" aria-hidden />
           </div>
-          <button type="button" onClick={onClose} aria-label="닫기" className="text-icon-soft -m-2 p-2">
+          <div className="report-receipt__sub">REVIEW · INTEGRITY FORM</div>
+          <button type="button" onClick={onClose} aria-label="닫기" className="report-receipt__close">
             <IcoClose />
           </button>
+        </header>
+
+        <hr className="receipt__hr" />
+
+        <div className="receipt__row">
+          <span className="receipt__row-label">대상</span>
+          <span className="receipt__row-value">{target.nickname}</span>
+        </div>
+        <div className="receipt__row">
+          <span className="receipt__row-label">별점</span>
+          <span className="receipt__row-value">{target.rating}.0 / 5</span>
+        </div>
+        <div className="receipt__row">
+          <span className="receipt__row-label">유형</span>
+          <span className="receipt__row-value">익명 후기 · 변조 불가</span>
         </div>
 
+        <hr className="receipt__hr" />
+
         {submitted ? (
-          <p className="text-text-strong py-8 text-center text-sm font-medium">신고가 접수되었어요</p>
+          <div className="report-receipt__done">
+            <div className="report-receipt__done-mark" aria-hidden>
+              ✓
+            </div>
+            <p className="report-receipt__done-title">신고 접수 완료</p>
+            <p className="report-receipt__done-sub">검토 후 정책 위반 시 24시간 내 비공개 처리됩니다.</p>
+          </div>
         ) : (
           <>
-            <ul className="mt-4 flex flex-col gap-1">
+            <div id="report-receipt-title" className="report-receipt__field-head">
+              <span>신고 사유</span>
+              <span className="report-receipt__field-hint">단일 선택 · 필수</span>
+            </div>
+            <ul className="report-receipt__reasons">
               {REASONS.map((r) => (
                 <li key={r.key}>
                   <button
                     type="button"
+                    className="report-receipt__reason"
+                    data-active={reason === r.key}
                     onClick={() => setReason(r.key)}
-                    className={`flex w-full items-center gap-2 rounded-lg px-3 py-3 text-left text-sm transition-colors ${
-                      reason === r.key ? 'bg-bg-soft text-text-strong font-semibold' : 'text-text-sub hover:bg-bg-weak'
-                    }`}
                   >
-                    <span
-                      className={`size-4 rounded-full border-2 ${
-                        reason === r.key ? 'border-brand-500 bg-brand-500' : 'border-stroke-sub'
-                      }`}
-                    />
-                    {r.label}
+                    <span className="report-receipt__reason-mark" aria-hidden />
+                    <span className="report-receipt__reason-label">{r.label}</span>
                   </button>
                 </li>
               ))}
             </ul>
 
-            <button
-              type="button"
-              onClick={onSubmit}
-              disabled={!reason}
-              className="bg-brand-500 hover:bg-brand-700 active:bg-brand-900 disabled:bg-bg-sub disabled:text-text-disabled mt-5 w-full rounded-full py-3.5 text-sm font-semibold text-white transition-colors disabled:cursor-not-allowed"
-            >
-              신고 접수
+            <hr className="receipt__hr" />
+
+            <button type="button" onClick={onSubmit} disabled={!reason} className="report-receipt__submit">
+              {reason ? '신고 접수하기 →' : '사유를 선택하세요'}
             </button>
+            <button type="button" onClick={onClose} className="report-receipt__cancel">
+              ← 취소하고 돌아가기
+            </button>
+
+            <div className="report-receipt__notice">
+              허위 신고는 계정 제재 사유가 될 수 있습니다 · 신고 내역은 익명으로 운영팀에만 전달됩니다
+            </div>
           </>
         )}
-      </div>
+      </article>
     </div>
   )
 }

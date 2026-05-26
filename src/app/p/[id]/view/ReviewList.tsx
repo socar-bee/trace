@@ -1,5 +1,8 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
+import { useCallback } from 'react'
+
 import { useReviewListViewModel } from '../viewmodel'
 import type { Review } from '@/shared/types/trace'
 
@@ -14,9 +17,19 @@ interface ReviewListProps {
 }
 
 export default function ReviewList({ seq, initialReviews, initialHasNext, totalCount }: ReviewListProps) {
+  const router = useRouter()
   const vm = useReviewListViewModel({ seq, initialReviews, initialHasNext })
+  // 서버 totalCount + 로컬에 보관된 내 후기 (마운트 후 hydrate). 처음에는 localCount=0.
+  const effectiveTotal = totalCount + vm.localCount
 
-  if (totalCount === 0) {
+  const editMine = useCallback(
+    (r: Review) => {
+      router.push(`/write?edit=${encodeURIComponent(r.id)}`)
+    },
+    [router]
+  )
+
+  if (effectiveTotal === 0) {
     return (
       <div className="border-stroke-soft bg-bg-weak rounded-2xl border px-6 py-12 text-center">
         <p className="text-text-strong text-base font-semibold">아직 이 주차장에 후기가 없어요</p>
@@ -33,7 +46,10 @@ export default function ReviewList({ seq, initialReviews, initialHasNext, totalC
     <>
       <div className="border-stroke-soft mb-1 flex items-center justify-between border-b pb-3">
         <p className="text-text-strong text-sm font-semibold">
-          후기 <span className="tabular-nums">{totalCount}</span>건
+          후기 <span className="tabular-nums">{effectiveTotal}</span>건
+          {vm.localCount > 0 && (
+            <span className="text-accent ml-2 font-mono text-[11px] tracking-[0.05em]">+ 내 후기 {vm.localCount}</span>
+          )}
         </p>
         <div className="flex items-center gap-1 text-sm">
           <button
@@ -58,11 +74,20 @@ export default function ReviewList({ seq, initialReviews, initialHasNext, totalC
       </div>
 
       <ul className={vm.loading ? 'opacity-60 transition-opacity' : ''}>
-        {vm.reviews.map((r) => (
-          <li key={r.id}>
-            <ReviewCard review={r} onReport={vm.openReport} />
-          </li>
-        ))}
+        {vm.reviews.map((r, i) => {
+          const mine = i < vm.localCount
+          return (
+            <li key={r.id}>
+              <ReviewCard
+                review={r}
+                onReport={vm.openReport}
+                isMine={mine}
+                onEdit={mine ? editMine : undefined}
+                onDelete={mine ? vm.deleteMine : undefined}
+              />
+            </li>
+          )
+        })}
       </ul>
 
       {vm.hasNext && (
