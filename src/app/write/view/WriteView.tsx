@@ -111,7 +111,7 @@ export default function WriteView({ token, editId, demoTokens }: WriteViewProps)
               TRACE
               <span className="write-receipt__brand-dot" />
             </div>
-            <div className="write-receipt__sub">{vm.isEdit ? 'PARKING RECEIPT · EDIT' : 'PARKING RECEIPT'}</div>
+            <div className="write-receipt__sub">{vm.isEdit ? 'PARKING REVIEW · EDIT' : 'PARKING REVIEW'}</div>
           </header>
 
           <hr className="receipt__hr" />
@@ -185,8 +185,11 @@ export default function WriteView({ token, editId, demoTokens }: WriteViewProps)
           {/* Tags field */}
           <div className="write-receipt__field">
             <div className="write-receipt__field-head">
-              <span>태그</span>
-              <span className="write-receipt__field-hint">복수 선택 · 선택사항</span>
+              <span>
+                태그
+                <span className="write-receipt__field-req">필수</span>
+              </span>
+              <span className="write-receipt__field-hint">복수 선택</span>
             </div>
             <div className="write-receipt__tags">
               {TAGS.map((t) => (
