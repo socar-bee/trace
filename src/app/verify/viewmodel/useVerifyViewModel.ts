@@ -3,6 +3,8 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useState, useSyncExternalStore } from 'react'
 
+import { earnTickets } from '@/shared/lib/ticket-storage'
+
 import type { ExtractedReceipt, VerifySource } from '../model'
 import { useAuthStore } from '@/shared/stores/authStore'
 
@@ -76,6 +78,7 @@ export function useVerifyViewModel() {
     if (profile) {
       setProfile({ ...profile, isVerifiedUser: true })
     }
+    earnTickets('verify', `${extracted.parkingLotSeq}-${extracted.date}-${extracted.enterAt}`)
     setTimeout(() => router.push(`/write?token=demo-${extracted.parkingLotSeq}`), 200)
   }
 

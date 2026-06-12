@@ -3,6 +3,8 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
+import { earnTickets } from '@/shared/lib/ticket-storage'
+
 import type { SignupResult } from '../model'
 import { useAuthStore } from '@/shared/stores/authStore'
 
@@ -35,6 +37,7 @@ export function useSignupViewModel() {
   const persist = (result: SignupResult, provider: 'email' | 'kakao' | 'naver' | 'google') => {
     setTokens(`mock-access-${result.joinedAt}`, `mock-refresh-${result.joinedAt}`)
     setProfile(buildProfile(result, provider))
+    earnTickets('signup')
   }
 
   const handleEmailSignup = async () => {

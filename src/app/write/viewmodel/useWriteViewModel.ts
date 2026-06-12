@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 
 import { REVIEW_CONTENT_MAX_LENGTH } from '@/shared/lib/constants'
+import { earnTickets } from '@/shared/lib/ticket-storage'
 import { findMyReviewById, hasWrittenForPayment, saveMyReview, updateMyReview } from '@/shared/lib/trace-storage'
 
 import type { TagKey, VerifyTokenResult } from '@/shared/types/trace'
@@ -135,6 +136,7 @@ export function useWriteViewModel({ token, editId = null }: UseWriteViewModelArg
       return
     }
     saveMyReview(result.review)
+    earnTickets('review', result.review.id)
     router.push(result.redirectUrl)
   }, [status, token, rating, tags, content, router])
 
