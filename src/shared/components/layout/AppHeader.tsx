@@ -48,6 +48,13 @@ export default function AppHeader({ showSearch = true, initialKeyword = '' }: Ap
 
         {/* Nav */}
         <nav className="ml-auto flex shrink-0 items-center gap-3 text-sm">
+          <Link
+            href="/event/fsd-draw"
+            className="text-fg-2 hover:text-fg inline-flex items-center gap-1.5 text-sm font-medium transition-colors"
+          >
+            <span className="bg-accent inline-block size-1.5 animate-pulse rounded-full" aria-hidden />
+            이벤트
+          </Link>
           {hydrated && isLoggedIn ? (
             <>
               <Link

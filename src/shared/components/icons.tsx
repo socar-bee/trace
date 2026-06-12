@@ -367,3 +367,17 @@ export function IcoWrite(props: IconProps) {
     </svg>
   )
 }
+
+export function IcoTicket(props: IconProps) {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" {...props}>
+      <path
+        d="M3.5 8.5A1.5 1.5 0 0 1 5 7h14a1.5 1.5 0 0 1 1.5 1.5v1.25a2.25 2.25 0 0 0 0 4.5v1.25A1.5 1.5 0 0 1 19 17H5a1.5 1.5 0 0 1-1.5-1.5v-1.25a2.25 2.25 0 0 0 0-4.5V8.5Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <path d="M14.5 7v10" stroke="currentColor" strokeWidth="1.6" strokeDasharray="2.2 2.2" />
+    </svg>
+  )
+}

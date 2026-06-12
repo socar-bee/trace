@@ -4,11 +4,12 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 
-import { IcoHome, IcoSearch, IcoUser, IcoWrite } from '@/shared/components/icons'
+import { IcoHome, IcoSearch, IcoTicket, IcoUser, IcoWrite } from '@/shared/components/icons'
 
 const NAV_ITEMS = [
   { label: '홈', href: '/', icon: IcoHome, match: (p: string) => p === '/' },
   { label: '검색', href: '/search', icon: IcoSearch, match: (p: string) => p.startsWith('/search') },
+  { label: '이벤트', href: '/event/fsd-draw', icon: IcoTicket, match: (p: string) => p.startsWith('/event') },
   { label: '후기', href: '/write', icon: IcoWrite, match: (p: string) => p.startsWith('/write') },
   { label: '내 후기', href: '/me/traces', icon: IcoUser, match: (p: string) => p.startsWith('/me') }
 ] as const
