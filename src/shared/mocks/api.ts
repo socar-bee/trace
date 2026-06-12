@@ -1,3 +1,4 @@
+import type { EventLeaderboard, LeaderboardEntry } from '@/shared/types/event'
 import type {
   ParkingLot,
   ParkingLotDetail,
@@ -9,6 +10,7 @@ import type {
   VerifyTokenResult
 } from '@/shared/types/trace'
 
+import { PARTICIPANT_BASE, getMockRankers } from './event'
 import { MOCK_PARKING_LOTS, findParkingLotBySeq, searchParkingLots } from './parkingLots'
 import { getRecommendStats } from './recommends'
 import { getRecentReviewCount, getReviewsBySeq, getWeeklyNewReviewCount } from './reviews'
@@ -373,5 +375,28 @@ export async function submitReview(
     ok: true,
     review,
     redirectUrl: `/p/${verified.parkingLotSeq}`
+  }
+}
+
+/**
+ * 이벤트 리더보드 — 결정적 랭커 풀에 내 응모권 수를 끼워 내 순위를 계산한다.
+ * 동률이면 isMe 우선 (mock 랭커는 timestamp가 없어 "최근 적립 우선" 규칙을 isMe로 근사).
+ */
+export async function fetchEventLeaderboard(myTickets: number, limit = 50): Promise<EventLeaderboard> {
+  const pool: LeaderboardEntry[] = getMockRankers().map((r) => ({
+    rank: 0,
+    maskedNickname: r.maskedNickname,
+    tickets: r.tickets
+  }))
+  if (myTickets > 0) {
+    pool.push({ rank: 0, maskedNickname: '나', tickets: myTickets, isMe: true })
+  }
+  pool.sort((a, b) => b.tickets - a.tickets || (a.isMe ? -1 : b.isMe ? 1 : 0))
+  const entries = pool.map((e, i) => ({ ...e, rank: i + 1 }))
+  return {
+    entries: entries.slice(0, limit),
+    myRank: entries.find((e) => e.isMe)?.rank ?? null,
+    myTickets,
+    totalParticipants: PARTICIPANT_BASE + entries.length
   }
 }
