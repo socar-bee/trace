@@ -61,10 +61,10 @@ export default function AppHeader({ showSearch = true, initialKeyword = '' }: Ap
                 href="/me/traces"
                 className="border-line-2 hover:border-fg bg-bg text-fg inline-flex items-center gap-1.5 border-[1.5px] px-3 py-1.5 font-mono text-xs transition-colors"
               >
-                <span className="bg-accent-500 inline-block size-1.5 rounded-full" aria-hidden />
-                <span className="hidden sm:inline">{profile?.userName ?? '내 후기'}</span>
+                <span className="bg-accent-500 inline-block size-1.5 shrink-0 rounded-full" aria-hidden />
+                <span className="max-w-[96px] truncate">{profile?.userName ?? '내 후기'}</span>
                 {profile?.isVerifiedUser && (
-                  <span className="bg-accent-500 text-static-white px-1 py-px text-[9px] font-bold tracking-wider">
+                  <span className="bg-accent-500 text-static-white shrink-0 px-1 py-px text-[9px] font-bold tracking-wider">
                     검증
                   </span>
                 )}
