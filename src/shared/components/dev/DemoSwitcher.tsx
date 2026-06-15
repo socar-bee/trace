@@ -26,6 +26,14 @@ const SECTIONS: DemoSection[] = [
     ]
   },
   {
+    title: 'Event · 럭키드로우',
+    desc: 'FSD 럭키드로우 — 퀘스트 응모권 적립 · 가중 추첨 리더보드',
+    links: [
+      { href: '/event/fsd-draw', label: 'FSD 럭키드로우 허브', hint: '경품·퀘스트·응모하기' },
+      { href: '/event/fsd-draw/leaderboard', label: '응모권 리더보드', hint: '전체 랭킹 · 내 순위' }
+    ]
+  },
+  {
     title: 'Reviews · 보기',
     desc: '작성된 후기가 모이는 주차장 상세 페이지',
     links: [
