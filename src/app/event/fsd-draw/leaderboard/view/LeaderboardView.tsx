@@ -3,9 +3,67 @@
 import Link from 'next/link'
 
 import { useLeaderboardViewModel } from '../viewmodel'
+import type { LeaderboardEntry } from '@/shared/types/event'
+
+type Place = 1 | 2 | 3
+
+const MEDAL: Record<Place, { grad: string; text: string; sub: string; chip: string; big: boolean }> = {
+  1: {
+    grad: 'linear-gradient(160deg, var(--color-yellow-300) 0%, var(--color-yellow-500) 55%, var(--color-yellow-600) 100%)',
+    text: 'text-fg',
+    sub: 'text-fg/55',
+    chip: 'bg-white/65 text-[#a87f00]',
+    big: true
+  },
+  2: {
+    grad: 'linear-gradient(160deg, var(--color-neutral-300) 0%, var(--color-neutral-400) 55%, var(--color-neutral-500) 100%)',
+    text: 'text-static-white',
+    sub: 'text-static-white/75',
+    chip: 'bg-white/25 text-static-white',
+    big: false
+  },
+  3: {
+    grad: 'linear-gradient(160deg, var(--color-caution-300) 0%, var(--color-caution-600) 55%, var(--color-caution-800) 100%)',
+    text: 'text-static-white',
+    sub: 'text-static-white/75',
+    chip: 'bg-white/25 text-static-white',
+    big: false
+  }
+}
+
+function PodiumCard({ entry, place }: { entry: LeaderboardEntry; place: Place }) {
+  const m = MEDAL[place]
+  return (
+    <div
+      className={`evt-rise relative flex flex-col items-center rounded-2xl px-1.5 text-center shadow-[0_8px_24px_-10px_rgba(0,0,0,0.3)] ${
+        m.big ? 'pt-4 pb-5' : 'mt-7 pt-3.5 pb-4'
+      } ${entry.isMe ? 'ring-brand-500 ring-2 ring-offset-2' : ''}`}
+      style={{ background: m.grad, animationDelay: place === 1 ? '0s' : place === 2 ? '0.08s' : '0.16s' }}
+    >
+      <span className={`font-mono text-[11px] font-bold tracking-[0.1em] ${m.text}`}>#{place}</span>
+      <span
+        className={`mt-2 flex items-center justify-center rounded-full font-mono font-extrabold ${m.chip} ${
+          m.big ? 'size-14 text-lg' : 'size-11 text-base'
+        }`}
+      >
+        {entry.isMe ? '나' : entry.maskedNickname.charAt(0)}
+      </span>
+      <span className={`mt-2 max-w-full truncate px-1 text-[13px] font-bold ${m.text}`}>
+        {entry.isMe ? '나' : entry.maskedNickname}
+      </span>
+      <span className={`mt-1 font-mono font-extrabold ${m.text} ${m.big ? 'text-xl' : 'text-lg'}`}>
+        {entry.tickets}
+        <span className={`ml-0.5 text-[10px] font-medium ${m.sub}`}>장</span>
+      </span>
+    </div>
+  )
+}
 
 export default function LeaderboardView() {
   const vm = useLeaderboardViewModel()
+  const entries = vm.data?.entries ?? []
+  const hasPodium = entries.length >= 3
+  const rest = hasPodium ? entries.slice(3) : entries
 
   return (
     <main className="mx-auto w-full max-w-[640px] flex-1 px-4 pt-6 pb-28 md:px-0">
@@ -44,17 +102,23 @@ export default function LeaderboardView() {
             )}
           </div>
 
-          <ol className="border-line divide-line mt-4 divide-y border-[1.5px]">
-            {vm.data.entries.map((e) => (
+          {/* 포디움 — Top 3 (1위 중앙·금, 2위 좌·은, 3위 우·동) */}
+          {hasPodium && (
+            <div className="mt-6 grid grid-cols-3 items-end gap-2.5">
+              <PodiumCard entry={entries[1]} place={2} />
+              <PodiumCard entry={entries[0]} place={1} />
+              <PodiumCard entry={entries[2]} place={3} />
+            </div>
+          )}
+
+          {/* 4위 이하 리스트 */}
+          <ol className="border-line divide-line mt-5 divide-y border-[1.5px]">
+            {rest.map((e) => (
               <li
                 key={`${e.rank}-${e.maskedNickname}`}
                 className={`flex items-center gap-3 px-4 py-3 font-mono text-sm ${e.isMe ? 'bg-brand-50' : 'bg-bg'}`}
               >
-                <span
-                  className={`w-10 shrink-0 text-xs ${
-                    e.isMe ? 'text-brand-600 font-bold' : e.rank <= 3 ? 'text-brand-500 font-bold' : 'text-fg-3'
-                  }`}
-                >
+                <span className={`w-10 shrink-0 text-xs ${e.isMe ? 'text-brand-600 font-bold' : 'text-fg-3'}`}>
                   #{e.rank}
                 </span>
                 <span className={`flex-1 truncate ${e.isMe ? 'text-brand-700 font-bold' : 'text-fg'}`}>

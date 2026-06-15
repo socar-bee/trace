@@ -1,38 +1,51 @@
+import Image from 'next/image'
+
+import { IcoSparkle, IcoTicket } from '@/shared/components/icons'
+
+type PrizeIcon = 'sparkle' | 'ticket'
+
 interface Prize {
-  tier: 'grand' | 'second' | 'all'
-  index: string
+  rank: string
   badge: string
-  count: string
   name: string
-  desc: string
-  value?: string
+  sub: string
+  count: string
+  img?: string
+  icon?: PrizeIcon
+  circle: string
+  iconColor: string
 }
 
 const PRIZES: Prize[] = [
   {
-    tier: 'grand',
-    index: '01',
-    badge: 'GRAND PRIZE',
+    rank: '1등',
+    badge: 'bg-brand-600 text-static-white',
+    name: '테슬라 모델X(FSD)',
+    sub: '1개월 사용권',
     count: '단 2명',
-    name: '테슬라 모델X(FSD) 1개월 사용권',
-    desc: '쏘카 FSD 구독 제공',
-    value: '시가 310만원 상당'
+    img: '/event/tesla-modelx.jpg',
+    circle: 'bg-bg-2',
+    iconColor: ''
   },
   {
-    tier: 'second',
-    index: '02',
-    badge: '2ND',
-    count: '300명',
+    rank: '2등',
+    badge: 'bg-yellow-500 text-fg',
     name: '기프티콘 5천원권',
-    desc: '모바일 쿠폰 발송'
+    sub: '모바일 쿠폰',
+    count: '300명',
+    icon: 'sparkle',
+    circle: 'bg-yellow-50',
+    iconColor: 'text-yellow-600'
   },
   {
-    tier: 'all',
-    index: 'ALL',
-    badge: '전원 증정',
-    count: '참여자 전원',
+    rank: '전원',
+    badge: 'bg-accent-600 text-static-white',
     name: '주차 할인 쿠폰',
-    desc: '최초 응모 시 1회 지급 · 중복 불가'
+    sub: '최초 응모 시 1회',
+    count: '참여자 전원',
+    icon: 'ticket',
+    circle: 'bg-accent-50',
+    iconColor: 'text-accent-600'
   }
 ]
 
@@ -45,80 +58,49 @@ export default function PrizeSection() {
         <span className="text-fg-3 font-mono text-[10px] tracking-[0.2em]">경품 안내</span>
       </div>
 
-      <ul className="mt-3.5 space-y-2.5">
-        {PRIZES.map((p, i) => {
-          const delay = { animationDelay: `${0.06 + i * 0.09}s` }
-
-          if (p.tier === 'grand') {
-            return (
-              <li
-                key={p.tier}
-                className="evt-rise border-brand-800 text-static-white relative overflow-hidden border-[1.5px] px-5 py-5 transition-transform hover:-translate-y-0.5"
-                style={{
-                  ...delay,
-                  background: 'linear-gradient(135deg, var(--color-brand-600) 0%, var(--color-brand-800) 100%)',
-                  boxShadow: '3px 3px 0 var(--color-brand-900)'
-                }}
+      <ul className="mt-5 grid grid-cols-3 gap-3">
+        {PRIZES.map((p, i) => (
+          <li
+            key={p.rank}
+            className="evt-rise flex flex-col items-center text-center"
+            style={{ animationDelay: `${0.06 + i * 0.09}s` }}
+          >
+            <div className="relative">
+              <div
+                className={`border-line-2 relative size-[88px] overflow-hidden rounded-full border-[1.5px] sm:size-[104px] ${p.circle}`}
               >
-                {/* 상단 화이트 sheen 글로우 + 거대 인덱스 워터마크 (간지) */}
-                <span
-                  className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-white/20 to-transparent"
-                  aria-hidden
-                />
-                <span className="text-static-white/[0.09] pointer-events-none absolute -right-3 -bottom-7 font-mono text-[130px] leading-none font-extrabold select-none">
-                  {p.index}
-                </span>
-
-                <div className="relative z-10">
-                  <div className="flex items-center gap-2">
-                    <span className="bg-static-white text-brand-700 inline-flex items-center px-2 py-0.5 font-mono text-[10px] font-bold tracking-[0.18em]">
-                      {p.badge}
-                    </span>
-                    <span className="text-static-white/70 font-mono text-[11px]">· {p.count}</span>
-                  </div>
-                  <p className="mt-3 text-[19px] leading-[1.3] font-extrabold tracking-[-0.01em]">{p.name}</p>
-                  <p className="text-static-white/70 mt-1.5 text-xs">{p.desc}</p>
-                  {p.value && (
-                    <span className="border-static-white/45 mt-3.5 inline-flex items-center gap-1.5 border bg-white/15 px-2.5 py-1">
-                      <span className="bg-static-white size-1 rounded-full" aria-hidden />
-                      <span className="text-static-white font-mono text-[11px] font-bold tracking-wide">{p.value}</span>
-                    </span>
-                  )}
-                </div>
-              </li>
-            )
-          }
-
-          const isAll = p.tier === 'all'
-          return (
-            <li
-              key={p.tier}
-              className={`evt-rise border-line-2 bg-bg relative overflow-hidden border-[1.5px] px-5 py-4 ${
-                isAll ? 'border-dashed' : ''
-              }`}
-              style={delay}
-            >
-              <span className="text-fg/[0.04] pointer-events-none absolute -right-2 -bottom-5 font-mono text-[88px] leading-none font-extrabold select-none">
-                {p.index}
-              </span>
-              <div className="relative z-10">
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`inline-flex items-center px-2 py-0.5 font-mono text-[10px] font-bold tracking-[0.16em] ${
-                      isAll ? 'bg-accent-600 text-static-white' : 'text-fg bg-yellow-500'
-                    }`}
-                  >
-                    {p.badge}
+                {p.img ? (
+                  <Image src={p.img} alt={p.name} fill sizes="104px" className="object-cover object-center" />
+                ) : (
+                  <span className="flex h-full items-center justify-center">
+                    {p.icon === 'sparkle' ? (
+                      <IcoSparkle className={`size-9 ${p.iconColor}`} />
+                    ) : (
+                      <IcoTicket className={`size-9 ${p.iconColor}`} />
+                    )}
                   </span>
-                  <span className="text-fg-3 font-mono text-[11px]">· {p.count}</span>
-                </div>
-                <p className="text-fg mt-2.5 text-[16px] font-bold">{p.name}</p>
-                <p className="text-fg-3 mt-0.5 text-xs">{p.desc}</p>
+                )}
               </div>
-            </li>
-          )
-        })}
+              <span
+                className={`absolute -top-1 -left-1 flex size-8 items-center justify-center rounded-full font-mono text-[11px] font-bold shadow-sm ${p.badge}`}
+              >
+                {p.rank}
+              </span>
+            </div>
+            <p className="text-fg mt-3 text-[13px] leading-tight font-bold">{p.name}</p>
+            <p className="text-fg-3 mt-0.5 text-[11px]">{p.sub}</p>
+            <p className="text-brand-600 mt-1 font-mono text-[11px] font-bold">{p.count}</p>
+          </li>
+        ))}
       </ul>
+
+      <div className="border-line mt-6 border-t border-dashed pt-4 text-center">
+        <p className="text-fg text-sm font-bold">참여하신 분들 중 추첨을 통해 경품을 드려요</p>
+        <p className="text-fg-3 mt-1.5 inline-flex items-center gap-1.5 text-xs">
+          <span className="bg-accent-500 size-1.5 rounded-full" aria-hidden />
+          응모권이 많을수록 당첨 확률이 올라가요 · 가중 추첨
+        </p>
+      </div>
     </section>
   )
 }
