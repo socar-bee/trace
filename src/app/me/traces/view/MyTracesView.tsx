@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 
+import NickAvatar from '@/shared/components/ui/NickAvatar'
 import { StarRatingDisplay } from '@/shared/components/ui/StarRating'
 import TagPill from '@/shared/components/ui/Tag'
 
@@ -74,9 +75,10 @@ export default function MyTracesView() {
                       </div>
                     )}
 
-                    <p className="text-text-soft text-xs">
-                      닉네임 · <span className="text-text-sub font-medium">{r.nickname}</span>
-                    </p>
+                    <div className="border-stroke-soft flex items-center gap-2 border-t pt-3">
+                      <NickAvatar nickname={r.nickname} style="dot" />
+                      <span className="text-text-soft ml-auto font-mono text-[10px] tracking-wide">공개 표시 이름</span>
+                    </div>
                   </Link>
 
                   <div className="border-stroke-soft flex items-center gap-3 border-t pt-3 text-xs">
