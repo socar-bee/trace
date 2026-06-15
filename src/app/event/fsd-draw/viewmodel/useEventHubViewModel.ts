@@ -2,7 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 
-import { earnTickets, getQuestEarnCounts, getTicketTotal, isReviewCappedToday } from '@/shared/lib/ticket-storage'
+import {
+  earnTickets,
+  getQuestEarnCounts,
+  getTicketTotal,
+  hasEnteredDraw,
+  isReviewCappedToday,
+  submitDrawEntry
+} from '@/shared/lib/ticket-storage'
 
 import { useAuthStore } from '@/shared/stores/authStore'
 
@@ -39,6 +46,7 @@ export function useEventHubViewModel() {
     invite: 0
   })
   const [reviewCapped, setReviewCapped] = useState(false)
+  const [entered, setEntered] = useState(false)
   const [preview, setPreview] = useState<EventLeaderboard | null>(null)
   const [inviteCopied, setInviteCopied] = useState(false)
 
@@ -46,27 +54,29 @@ export function useEventHubViewModel() {
     setMyTickets(getTicketTotal())
     setEarnCounts(getQuestEarnCounts())
     setReviewCapped(isReviewCappedToday())
+    setEntered(hasEnteredDraw())
   }, [])
 
-  // 마운트 후 보유 응모권/퀘스트 상태 동기화 (적립은 명시적 '응모하기' 버튼으로)
+  // 마운트 시 첫 방문 응모권 자동 적립(계정에 쌓임) + 상태 동기화. 응모 확정은 별도 '응모하기' 버튼.
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (!hydrated) return
+    if (isLoggedIn && status === 'active') earnTickets('enter')
     refresh()
-  }, [hydrated, refresh])
+  }, [hydrated, isLoggedIn, status, refresh])
   /* eslint-enable react-hooks/set-state-in-effect */
 
-  // 리더보드 프리뷰 — 내 응모권 수가 바뀔 때마다 갱신
+  // 리더보드 프리뷰 — 응모 확정한 경우에만 내 응모권을 랭킹에 반영
   useEffect(() => {
     if (!hydrated) return
     let cancelled = false
-    fetchEventLeaderboard(myTickets, 5).then((r) => {
+    fetchEventLeaderboard(entered ? myTickets : 0, 5).then((r) => {
       if (!cancelled) setPreview(r)
     })
     return () => {
       cancelled = true
     }
-  }, [hydrated, myTickets])
+  }, [hydrated, entered, myTickets])
 
   const quests: QuestItemVM[] = useMemo(
     () =>
@@ -89,9 +99,9 @@ export function useEventHubViewModel() {
     }
   }, [])
 
-  // 응모하기 — 첫 응모권(enter)을 적립하며 참여 확정. (once 캡이라 재호출은 no-op)
+  // 응모하기 — 보유 응모권으로 드로우 참여 확정 (응모권을 추가 적립하지는 않음)
   const enterDraw = useCallback(() => {
-    earnTickets('enter')
+    submitDrawEntry()
     refresh()
   }, [refresh])
 
@@ -106,7 +116,7 @@ export function useEventHubViewModel() {
     status,
     canRender: hydrated,
     isLoggedIn: hydrated && isLoggedIn,
-    hasEntered: earnCounts.enter > 0,
+    hasEntered: entered,
     myTickets,
     quests,
     preview,

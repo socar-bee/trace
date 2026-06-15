@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from 'react'
 
-import { getTicketTotal } from '@/shared/lib/ticket-storage'
+import { getTicketTotal, hasEnteredDraw } from '@/shared/lib/ticket-storage'
 
 import { useAuthStore } from '@/shared/stores/authStore'
 
@@ -22,7 +22,7 @@ export function useLeaderboardViewModel() {
   useEffect(() => {
     if (!hydrated) return
     let cancelled = false
-    fetchEventLeaderboard(getTicketTotal(), 50).then((r) => {
+    fetchEventLeaderboard(hasEnteredDraw() ? getTicketTotal() : 0, 50).then((r) => {
       if (!cancelled) setData(r)
     })
     return () => {

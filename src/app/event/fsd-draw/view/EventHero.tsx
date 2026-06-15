@@ -74,7 +74,7 @@ export default function EventHero({
           className={`${CTA_BASE} evt-live bg-accent text-static-white hover:-translate-y-px`}
           style={{ boxShadow: '3px 3px 0 var(--color-static-white)' }}
         >
-          응모하기 — 응모권 1장 받기
+          내 응모권 {myTickets}장으로 응모하기
         </button>
       )
     }

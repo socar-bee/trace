@@ -73,3 +73,19 @@ export function isReviewCappedToday(now = new Date()): boolean {
   if (cap.kind !== 'daily') return false
   return getEntryTickets().filter((t) => t.questId === 'review' && isSameLocalDay(t.earnedAt, now)).length >= cap.limit
 }
+
+// ─── 응모(draw entry) — 응모권 적립과 분리. 유저가 '응모하기'를 눌러야 참여 확정. ───
+const DRAW_ENTERED_KEY = 'trace_event_entered'
+
+export function hasEnteredDraw(): boolean {
+  if (typeof window === 'undefined') return false
+  return localStorage.getItem(DRAW_ENTERED_KEY) === '1'
+}
+
+/** 응모 확정 — 보유 응모권으로 이 드로우에 참여. 응모권을 추가로 적립하지는 않는다. */
+export function submitDrawEntry(): boolean {
+  if (typeof window === 'undefined') return false
+  if (getEventStatus() !== 'active') return false
+  localStorage.setItem(DRAW_ENTERED_KEY, '1')
+  return true
+}

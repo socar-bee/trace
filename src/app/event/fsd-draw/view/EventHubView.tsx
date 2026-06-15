@@ -48,7 +48,14 @@ export default function EventHubView() {
             >
               <span className="flex items-center gap-2.5">
                 <IcoTicket className="evt-float text-accent size-6" />
-                <span className="text-sm font-bold">보유 응모권</span>
+                <span className="flex flex-col">
+                  <span className="text-sm font-bold">보유 응모권</span>
+                  <span
+                    className={`font-mono text-[10px] ${vm.hasEntered ? 'text-accent-300' : 'text-static-white/50'}`}
+                  >
+                    {vm.hasEntered ? '● 응모 완료 · 참여 중' : '아직 응모 전 — 위에서 응모하기'}
+                  </span>
+                </span>
               </span>
               <span className="font-mono text-2xl font-extrabold tracking-tight tabular-nums">
                 {vm.myTickets}
