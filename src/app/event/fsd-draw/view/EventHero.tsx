@@ -57,11 +57,7 @@ export default function EventHero({
     // SSR/하이드레이션 전 + 비로그인 → 동일하게 로그인 유도 (mismatch 회피)
     if (!canRender || !isLoggedIn) {
       return (
-        <Link
-          href={loginHref}
-          className={`${CTA_BASE} bg-accent text-static-white hover:-translate-y-px`}
-          style={{ boxShadow: '3px 3px 0 var(--color-static-white)' }}
-        >
+        <Link href={loginHref} className={`${CTA_BASE} bg-accent text-static-white hover:-translate-y-px`}>
           로그인하고 응모하기
         </Link>
       )
@@ -72,17 +68,13 @@ export default function EventHero({
           type="button"
           onClick={onEnter}
           className={`${CTA_BASE} evt-live bg-accent text-static-white hover:-translate-y-px`}
-          style={{ boxShadow: '3px 3px 0 var(--color-static-white)' }}
         >
           내 응모권 {myTickets}장으로 응모하기
         </button>
       )
     }
     return (
-      <div
-        className={`${CTA_BASE} bg-static-white text-fg flex items-center justify-center gap-2`}
-        style={{ boxShadow: '3px 3px 0 var(--color-accent)' }}
-      >
+      <div className={`${CTA_BASE} bg-static-white text-fg flex items-center justify-center gap-2`}>
         <span className="bg-accent size-1.5 rounded-full" aria-hidden />
         응모 완료 · {myTickets}장으로 참여 중
       </div>
