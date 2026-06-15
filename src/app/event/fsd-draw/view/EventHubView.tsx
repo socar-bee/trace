@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 
+import { IcoTicket } from '@/shared/components/icons'
+
 import { useEventHubViewModel } from '../viewmodel'
 
 import EventHero from './EventHero'
@@ -37,13 +39,16 @@ export default function EventHubView() {
         {!vm.canRender ? null : vm.isLoggedIn ? (
           <>
             <div
-              className="border-fg bg-bg mt-3 flex items-baseline justify-between border-[1.5px] px-4 py-3.5"
+              className="evt-pop border-fg bg-fg text-static-white mt-3 flex items-center justify-between overflow-hidden border-[1.5px] px-4 py-4"
               style={{ boxShadow: '2px 2px 0 var(--color-fg)' }}
             >
-              <span className="text-fg text-sm font-bold">보유 응모권</span>
-              <span className="text-fg font-mono text-xl font-extrabold">
+              <span className="flex items-center gap-2.5">
+                <IcoTicket className="evt-float text-accent size-6" />
+                <span className="text-sm font-bold">보유 응모권</span>
+              </span>
+              <span className="font-mono text-2xl font-extrabold tracking-tight tabular-nums">
                 {vm.myTickets}
-                <span className="text-fg-3 ml-1 text-xs font-medium">장</span>
+                <span className="text-static-white/50 ml-1 text-xs font-medium">장</span>
               </span>
             </div>
             <div className="mt-2.5">

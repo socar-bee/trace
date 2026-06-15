@@ -1280,3 +1280,114 @@ body {
   letter-spacing: 0.02em;
   line-height: 1.55;
 }
+
+/* ════════════════════════════════════════════════════════════
+   EVENT — FSD 럭키드로우 (hero 사진 블렌드 + 생동감 모션)
+   prefers-reduced-motion 블록(상단)이 모든 animation을 무력화하므로
+   접근성은 자동 보호된다.
+   ════════════════════════════════════════════════════════════ */
+
+/* 히어로 배경 사진: 아주 느린 ken-burns 줌 */
+@keyframes evt-kenburns {
+  0% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1.14);
+  }
+}
+
+/* 대각선 광택(sheen) 한 줄이 주기적으로 쓸고 지나감 */
+@keyframes evt-sheen {
+  0% {
+    transform: translateX(-130%) skewX(-18deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.55;
+  }
+  38% {
+    transform: translateX(240%) skewX(-18deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(240%) skewX(-18deg);
+    opacity: 0;
+  }
+}
+
+/* 진입 시 아래에서 부드럽게 떠오름 (stagger는 inline delay로) */
+@keyframes evt-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* NOW OPEN live 칩 — 파란 링이 번지듯 */
+@keyframes evt-live {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 153, 255, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(0, 153, 255, 0);
+  }
+}
+
+/* 응모권 카드 — 살짝 튀어오르며 등장 */
+@keyframes evt-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  60% {
+    transform: scale(1.025);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 티켓 아이콘 둥실 */
+@keyframes evt-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.evt-hero-img {
+  animation: evt-kenburns 17s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.evt-sheen {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 38%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+  animation: evt-sheen 7.5s ease-in-out 1.4s infinite;
+  pointer-events: none;
+}
+.evt-rise {
+  animation: evt-rise 0.66s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.evt-live {
+  animation: evt-live 2.4s ease-out infinite;
+}
+.evt-pop {
+  animation: evt-pop 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.evt-float {
+  animation: evt-float 4.5s ease-in-out infinite;
+}

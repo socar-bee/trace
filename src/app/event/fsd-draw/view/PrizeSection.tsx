@@ -14,11 +14,14 @@ export default function PrizeSection() {
     <section className="mt-6">
       <h2 className="text-fg-3 font-mono text-xs tracking-[0.25em]">PRIZES — 경품 안내</h2>
       <ul className="mt-3 space-y-2.5">
-        {PRIZES.map((p) => (
+        {PRIZES.map((p, i) => (
           <li
             key={p.grade}
-            className={`border-[1.5px] px-4 py-3.5 ${p.highlight ? 'border-fg bg-bg' : 'border-line bg-bg'}`}
-            style={p.highlight ? { boxShadow: '2px 2px 0 var(--color-fg)' } : undefined}
+            className={`evt-rise border-[1.5px] px-4 py-3.5 ${p.highlight ? 'border-fg bg-bg' : 'border-line bg-bg'}`}
+            style={{
+              animationDelay: `${0.06 + i * 0.09}s`,
+              boxShadow: p.highlight ? '2px 2px 0 var(--color-fg)' : undefined
+            }}
           >
             <p className={`font-mono text-[11px] font-bold ${p.highlight ? 'text-accent-500' : 'text-fg-3'}`}>
               {p.grade}
