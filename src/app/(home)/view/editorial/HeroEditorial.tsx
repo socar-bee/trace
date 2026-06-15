@@ -1,5 +1,6 @@
 import AdSlot from './AdSlot'
 import AnimatedHeading from './AnimatedHeading'
+import EventBanner from './EventBanner'
 
 const HERO_TEXT = '반갑습니다'
 
@@ -107,8 +108,9 @@ export default function HeroEditorial({ compact = false, totalReviews, totalLots
             )}
           </div>
 
-          {/* 우측 광고 — md+ 노출 */}
-          <div className="md:pl-10">
+          {/* 우측 — 이벤트 배너 + 광고 */}
+          <div className="mt-8 md:mt-0 md:pl-10">
+            <EventBanner />
             <AdSlot />
           </div>
         </div>

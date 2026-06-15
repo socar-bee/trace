@@ -42,7 +42,7 @@ export default function HotReviewsSection({ reviews }: HotReviewsSectionProps) {
               <Link
                 key={r.reviewId}
                 href={`/p/${r.parkingLotSeq}`}
-                className="border-line bg-bg hover:border-accent hover:bg-brand-50 group flex min-w-0 flex-col gap-2.5 rounded-xl border p-4 transition-colors"
+                className="border-line bg-bg hover:border-fg-3 group flex min-w-0 flex-col gap-2.5 rounded-xl border p-4 transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_22px_-10px_rgba(0,0,0,0.22)]"
               >
                 <div className="flex min-w-0 items-baseline justify-between gap-2">
                   <span className="text-fg min-w-0 truncate text-[13px] font-bold tracking-tight">
