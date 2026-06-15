@@ -29,7 +29,7 @@ const PRIZES: Prize[] = [
     name: '기프티콘 5천원권',
     sub: '모바일 쿠폰',
     count: '300명',
-    img: '/event/gift.svg',
+    img: '/event/gift.jpg',
     fit: 'cover',
     circle: 'bg-yellow-100'
   },
