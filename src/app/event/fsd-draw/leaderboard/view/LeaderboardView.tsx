@@ -8,22 +8,23 @@ import type { LeaderboardEntry } from '@/shared/types/event'
 type Place = 1 | 2 | 3
 
 const MEDAL: Record<Place, { grad: string; text: string; sub: string; chip: string; big: boolean }> = {
+  // 포디움 색상 = 경품 색상 (1등 브랜드 블루 / 2등 옐로우 / 3등 전원 그린)
   1: {
-    grad: 'linear-gradient(160deg, var(--color-yellow-300) 0%, var(--color-yellow-500) 55%, var(--color-yellow-600) 100%)',
-    text: 'text-fg',
-    sub: 'text-fg/55',
-    chip: 'bg-white/65 text-[#a87f00]',
+    grad: 'linear-gradient(160deg, var(--color-brand-400) 0%, var(--color-brand-600) 55%, var(--color-brand-800) 100%)',
+    text: 'text-static-white',
+    sub: 'text-static-white/70',
+    chip: 'bg-white/25 text-static-white',
     big: true
   },
   2: {
-    grad: 'linear-gradient(160deg, var(--color-neutral-300) 0%, var(--color-neutral-400) 55%, var(--color-neutral-500) 100%)',
-    text: 'text-static-white',
-    sub: 'text-static-white/75',
-    chip: 'bg-white/25 text-static-white',
+    grad: 'linear-gradient(160deg, var(--color-yellow-300) 0%, var(--color-yellow-500) 55%, var(--color-yellow-600) 100%)',
+    text: 'text-fg',
+    sub: 'text-fg/55',
+    chip: 'bg-white/60 text-fg',
     big: false
   },
   3: {
-    grad: 'linear-gradient(160deg, var(--color-caution-300) 0%, var(--color-caution-600) 55%, var(--color-caution-800) 100%)',
+    grad: 'linear-gradient(160deg, var(--color-accent-500) 0%, var(--color-accent-600) 55%, var(--color-accent-700) 100%)',
     text: 'text-static-white',
     sub: 'text-static-white/75',
     chip: 'bg-white/25 text-static-white',
