@@ -4,7 +4,12 @@
 @import 'tailwindcss';
 
 @theme {
-  /* ─── MODU Primitives ─── */
+  /* ──────────────────────────────────────────────────────────────
+     MODU Design System primitives — Figma: Moduparking-DS
+     (node 53464-5549 변수값과 정렬. 토큰 이름은 repo 시맨틱 유지)
+     ────────────────────────────────────────────────────────────── */
+
+  /* ─── Neutral · Gray (DS neutral/gray) ─── */
   --color-neutral-950: #171717;
   --color-neutral-900: #1c1c1c;
   --color-neutral-800: #262626;
@@ -14,11 +19,12 @@
   --color-neutral-400: #a3a3a3;
   --color-neutral-300: #d1d1d1;
   --color-neutral-200: #ebebeb;
-  --color-neutral-100: #f7f7f7;
-  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-50: #f7f7f7;
   --color-neutral-0: #ffffff;
 
-  /* ─── Brand (Primary Blue · 본진 시그너처) ─── */
+  /* ─── Brand (Primary Blue · DS brand) ─── */
+  --color-brand-950: #003d66;
   --color-brand-900: #005c99;
   --color-brand-800: #006bb3;
   --color-brand-700: #007acc;
@@ -30,7 +36,7 @@
   --color-brand-100: #cceaff;
   --color-brand-50: #e6f5ff;
 
-  /* ─── Accent (green · 검증/추천) ─── */
+  /* ─── Accent (green · 검증/추천) — repo 확장, DS 팔레트엔 green 없음 ─── */
   --color-accent-900: #14532d;
   --color-accent-700: #15803d;
   --color-accent-600: #16a34a;
@@ -38,25 +44,73 @@
   --color-accent-100: #dcfce7;
   --color-accent-50: #f0fdf4;
 
-  /* ─── Negative (red · 본진 톤) ─── */
+  /* ─── Negative (red · DS red) ─── */
+  --color-negative-950: #7a2525;
+  --color-negative-900: #992e2e;
+  --color-negative-800: #b33535;
   --color-negative-700: #cc3d3d;
   --color-negative-600: #e64444;
   --color-negative-500: #ff4c4c;
+  --color-negative-400: #ff7575;
+  --color-negative-300: #ff9d9d;
+  --color-negative-200: #ffc5c5;
   --color-negative-100: #ffe2e2;
   --color-negative-50: #fff1f1;
 
-  /* ─── Caution / Star (orange) ─── */
-  --color-caution-700: #cc832e;
-  --color-caution-500: #ffa93b;
-  --color-caution-100: #ffddb1;
-  --color-caution-50: #fff7ec;
-  --color-star: #ffa93b;
+  /* ─── Yellow (DS yellow · 신호/별점 gold) ─── */
+  --color-yellow-950: #403100;
+  --color-yellow-900: #664f00;
+  --color-yellow-800: #8c6d00;
+  --color-yellow-700: #b38b00;
+  --color-yellow-600: #d9a900;
+  --color-yellow-500: #ffc600;
+  --color-yellow-400: #ffd31a;
+  --color-yellow-300: #ffe04d;
+  --color-yellow-200: #ffed80;
+  --color-yellow-100: #fff4b3;
+  --color-yellow-50: #fffbe6;
 
-  /* ─── Mint / Purple — 본진 풀 토큰 (보조) ─── */
+  /* ─── Caution (orange · DS orange) ─── */
+  --color-caution-950: #402100;
+  --color-caution-900: #663400;
+  --color-caution-800: #8c4800;
+  --color-caution-700: #b35c00;
+  --color-caution-600: #d97000;
+  --color-caution-500: #ff8400;
+  --color-caution-400: #ff9b1a;
+  --color-caution-300: #ffb14d;
+  --color-caution-200: #ffc680;
+  --color-caution-100: #ffe0b3;
+  --color-caution-50: #fff3e6;
+
+  /* ─── Star · 별점 gold (DS yellow/500) ─── */
+  --color-star: #ffc600;
+
+  /* ─── Mint (DS mint) ─── */
+  --color-mint-950: #004d4b;
+  --color-mint-900: #006664;
+  --color-mint-800: #009996;
   --color-mint-700: #00ccc8;
+  --color-mint-600: #00e6e1;
   --color-mint-500: #00fffa;
-  --color-purple-700: #bf00cc;
-  --color-purple-500: #ef00ff;
+  --color-mint-400: #33fff8;
+  --color-mint-300: #66fff7;
+  --color-mint-200: #99fff9;
+  --color-mint-100: #ccffff;
+  --color-mint-50: #e6ffff;
+
+  /* ─── Purple (DS purple · violet) ─── */
+  --color-purple-950: #280940;
+  --color-purple-900: #3f0e65;
+  --color-purple-800: #56148a;
+  --color-purple-700: #6d19af;
+  --color-purple-600: #841fd4;
+  --color-purple-500: #9b24f9;
+  --color-purple-400: #af47ff;
+  --color-purple-300: #c275ff;
+  --color-purple-200: #d6a3ff;
+  --color-purple-100: #ebd2ff;
+  --color-purple-50: #f5e9ff;
 
   /* ─── Editorial semantic aliases ─── */
   --color-fg: var(--color-neutral-950);

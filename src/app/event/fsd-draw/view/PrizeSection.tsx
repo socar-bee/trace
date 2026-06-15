@@ -101,7 +101,7 @@ export default function PrizeSection() {
                 <div className="flex items-center gap-2">
                   <span
                     className={`inline-flex items-center px-2 py-0.5 font-mono text-[10px] font-bold tracking-[0.16em] ${
-                      isAll ? 'bg-accent-600 text-static-white' : 'bg-caution-500 text-fg'
+                      isAll ? 'bg-accent-600 text-static-white' : 'text-fg bg-yellow-500'
                     }`}
                   >
                     {p.badge}
