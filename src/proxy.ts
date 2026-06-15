@@ -5,7 +5,7 @@ const FROM_APP_PARAM = 'from'
 
 // Why: 네이티브 앱 webview 진입 시 ?from=app 를 한 번만 쿠키로 박제해서
 //      이후 라우팅·새로고침에도 풀스크린 모드(=DockBar 숨김)를 유지한다.
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const url = req.nextUrl
   if (url.searchParams.get(FROM_APP_PARAM) !== 'app') return NextResponse.next()
 
