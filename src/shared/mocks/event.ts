@@ -17,8 +17,8 @@ export const FSD_EVENT = {
 export const EVENT_QUESTS: EventQuestDef[] = [
   {
     id: 'enter',
-    title: '이벤트 첫 방문',
-    description: '로그인하고 이벤트에 들어오면 자동 적립',
+    title: '응모하기 (첫 응모)',
+    description: '응모하기 버튼을 누르면 첫 응모권 적립',
     tickets: 1,
     cap: { kind: 'once' }
   },

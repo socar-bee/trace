@@ -48,13 +48,12 @@ export function useEventHubViewModel() {
     setReviewCapped(isReviewCappedToday())
   }, [])
 
-  // 마운트 + 로그인 + 진행중이면 최초 진입 적립 (once 캡이라 재방문은 no-op)
+  // 마운트 후 보유 응모권/퀘스트 상태 동기화 (적립은 명시적 '응모하기' 버튼으로)
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (!hydrated) return
-    if (isLoggedIn && status === 'active') earnTickets('enter')
     refresh()
-  }, [hydrated, isLoggedIn, status, refresh])
+  }, [hydrated, refresh])
   /* eslint-enable react-hooks/set-state-in-effect */
 
   // 리더보드 프리뷰 — 내 응모권 수가 바뀔 때마다 갱신
@@ -90,6 +89,12 @@ export function useEventHubViewModel() {
     }
   }, [])
 
+  // 응모하기 — 첫 응모권(enter)을 적립하며 참여 확정. (once 캡이라 재호출은 no-op)
+  const enterDraw = useCallback(() => {
+    earnTickets('enter')
+    refresh()
+  }, [refresh])
+
   // 데모: 초대받은 친구의 가입 완료를 시뮬레이션
   const simulateInviteJoin = useCallback(() => {
     earnTickets('invite', `invite-${Date.now()}`)
@@ -101,10 +106,12 @@ export function useEventHubViewModel() {
     status,
     canRender: hydrated,
     isLoggedIn: hydrated && isLoggedIn,
+    hasEntered: earnCounts.enter > 0,
     myTickets,
     quests,
     preview,
     inviteCopied,
+    enterDraw,
     copyInviteLink,
     simulateInviteJoin
   }

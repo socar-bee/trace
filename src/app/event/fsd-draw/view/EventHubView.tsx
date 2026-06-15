@@ -1,7 +1,5 @@
 'use client'
 
-import Link from 'next/link'
-
 import { IcoTicket } from '@/shared/components/icons'
 
 import { useEventHubViewModel } from '../viewmodel'
@@ -30,6 +28,12 @@ export default function EventHubView() {
         title={vm.event.title}
         subtitle={vm.event.subtitle}
         periodLabel={vm.event.periodLabel}
+        canRender={vm.canRender}
+        isLoggedIn={vm.isLoggedIn}
+        hasEntered={vm.hasEntered}
+        myTickets={vm.myTickets}
+        loginHref="/login?return=/event/fsd-draw"
+        onEnter={vm.enterDraw}
       />
 
       <PrizeSection />
@@ -62,16 +66,12 @@ export default function EventHubView() {
             </div>
           </>
         ) : (
-          <div className="border-line bg-bg mt-3 border-[1.5px] border-dashed px-4 py-6 text-center">
-            <p className="text-fg text-sm font-bold">로그인하면 응모권 1장을 바로 드려요</p>
-            <p className="text-fg-3 mt-1 text-xs">퀘스트를 달성할 때마다 응모권이 쌓여요.</p>
-            <Link
-              href="/login?return=/event/fsd-draw"
-              className="bg-accent text-static-white border-fg mt-4 inline-block border-[1.5px] px-4 py-2 text-xs font-bold"
-              style={{ boxShadow: '2px 2px 0 var(--color-fg)' }}
-            >
-              로그인하고 응모 시작
-            </Link>
+          <div className="border-line bg-bg mt-3 border-[1.5px] border-dashed px-4 py-5 text-center">
+            <p className="text-fg text-sm font-bold">로그인하면 퀘스트로 응모권을 모을 수 있어요</p>
+            <p className="text-fg-3 mt-1 text-xs">
+              위 <span className="text-accent-500 font-semibold">응모하기</span> 버튼으로 시작하세요. 후기·인증·초대마다
+              응모권이 쌓여요.
+            </p>
           </div>
         )}
       </section>
