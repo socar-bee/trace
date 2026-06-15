@@ -53,31 +53,35 @@ export default function PrizeSection() {
             return (
               <li
                 key={p.tier}
-                className="evt-rise border-fg bg-fg text-static-white relative overflow-hidden border-[1.5px] px-5 py-5 transition-transform hover:-translate-y-0.5"
-                style={{ ...delay, boxShadow: '3px 3px 0 var(--color-brand-500)' }}
+                className="evt-rise border-brand-800 text-static-white relative overflow-hidden border-[1.5px] px-5 py-5 transition-transform hover:-translate-y-0.5"
+                style={{
+                  ...delay,
+                  background: 'linear-gradient(135deg, var(--color-brand-600) 0%, var(--color-brand-800) 100%)',
+                  boxShadow: '3px 3px 0 var(--color-brand-900)'
+                }}
               >
-                {/* 상단 블루 글로우 + 거대 인덱스 워터마크 (간지) */}
+                {/* 상단 화이트 sheen 글로우 + 거대 인덱스 워터마크 (간지) */}
                 <span
-                  className="from-brand-500/20 pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b to-transparent"
+                  className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-white/20 to-transparent"
                   aria-hidden
                 />
-                <span className="text-static-white/[0.05] pointer-events-none absolute -right-3 -bottom-7 font-mono text-[130px] leading-none font-extrabold select-none">
+                <span className="text-static-white/[0.09] pointer-events-none absolute -right-3 -bottom-7 font-mono text-[130px] leading-none font-extrabold select-none">
                   {p.index}
                 </span>
 
                 <div className="relative z-10">
                   <div className="flex items-center gap-2">
-                    <span className="bg-brand-500 text-static-white inline-flex items-center px-2 py-0.5 font-mono text-[10px] font-bold tracking-[0.18em]">
+                    <span className="bg-static-white text-brand-700 inline-flex items-center px-2 py-0.5 font-mono text-[10px] font-bold tracking-[0.18em]">
                       {p.badge}
                     </span>
-                    <span className="text-static-white/55 font-mono text-[11px]">· {p.count}</span>
+                    <span className="text-static-white/70 font-mono text-[11px]">· {p.count}</span>
                   </div>
                   <p className="mt-3 text-[19px] leading-[1.3] font-extrabold tracking-[-0.01em]">{p.name}</p>
-                  <p className="text-static-white/50 mt-1.5 text-xs">{p.desc}</p>
+                  <p className="text-static-white/70 mt-1.5 text-xs">{p.desc}</p>
                   {p.value && (
-                    <span className="border-brand-400/50 bg-brand-500/15 mt-3.5 inline-flex items-center gap-1.5 border px-2.5 py-1">
-                      <span className="bg-brand-400 size-1 rounded-full" aria-hidden />
-                      <span className="text-brand-200 font-mono text-[11px] font-bold tracking-wide">{p.value}</span>
+                    <span className="border-static-white/45 mt-3.5 inline-flex items-center gap-1.5 border bg-white/15 px-2.5 py-1">
+                      <span className="bg-static-white size-1 rounded-full" aria-hidden />
+                      <span className="text-static-white font-mono text-[11px] font-bold tracking-wide">{p.value}</span>
                     </span>
                   )}
                 </div>
