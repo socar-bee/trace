@@ -9,37 +9,44 @@ import type { LeaderboardEntry } from '@/shared/types/event'
 type Place = 1 | 2 | 3
 
 interface Medal {
-  grad: string
-  text: string
-  sub: string
+  /** 카드 베이스 (흰 카드, 1등만 살짝 brand 틴트) */
+  card: string
+  /** 랭크 칩 (티어 색) */
+  pill: string
+  /** 코인 링 (티어 색) */
+  ring: string
+  /** 응모권 숫자 강조 */
+  tickets: string
   big: boolean
-  /** 경품 메달(coin) 이미지 */
   prize: string
   prizeFit: 'cover' | 'contain'
 }
 
 const MEDAL: Record<Place, Medal> = {
-  // 포디움 색상·메달 = 경품 (1등 블루·테슬라 / 2등 옐로우·기프티콘 / 3등 그린·모주로고)
+  // 흰 카드 + 티어 색은 포인트로만 (1등 블루·테슬라 / 2등 옐로우·기프티콘 / 3등 그린·모주로고)
   1: {
-    grad: 'linear-gradient(165deg, var(--color-brand-500) 0%, var(--color-brand-700) 100%)',
-    text: 'text-static-white',
-    sub: 'text-static-white/65',
+    card: 'bg-brand-50 border-brand-200',
+    pill: 'bg-brand-500 text-static-white',
+    ring: 'ring-brand-400',
+    tickets: 'text-brand-700',
     big: true,
     prize: '/event/tesla-modelx.jpg',
     prizeFit: 'cover'
   },
   2: {
-    grad: 'linear-gradient(165deg, var(--color-yellow-400) 0%, var(--color-yellow-600) 100%)',
-    text: 'text-fg',
-    sub: 'text-fg/50',
+    card: 'bg-bg border-line',
+    pill: 'bg-yellow-500 text-fg',
+    ring: 'ring-yellow-500',
+    tickets: 'text-fg',
     big: false,
     prize: '/event/gift.jpg',
     prizeFit: 'cover'
   },
   3: {
-    grad: 'linear-gradient(165deg, var(--color-accent-500) 0%, var(--color-accent-700) 100%)',
-    text: 'text-static-white',
-    sub: 'text-static-white/70',
+    card: 'bg-bg border-line',
+    pill: 'bg-accent-600 text-static-white',
+    ring: 'ring-accent-500',
+    tickets: 'text-fg',
     big: false,
     prize: '/icons/icn_modu.svg',
     prizeFit: 'contain'
@@ -50,16 +57,18 @@ function PodiumCard({ entry, place }: { entry: LeaderboardEntry; place: Place })
   const m = MEDAL[place]
   return (
     <div
-      className={`evt-rise relative flex flex-col items-center rounded-2xl px-1.5 text-center shadow-[0_10px_28px_-12px_rgba(0,0,0,0.35)] ${
-        m.big ? 'pt-5 pb-5' : 'mt-8 pt-4 pb-4'
-      } ${entry.isMe ? 'ring-fg ring-2 ring-offset-2' : ''}`}
-      style={{ background: m.grad, animationDelay: place === 1 ? '0s' : place === 2 ? '0.08s' : '0.16s' }}
+      className={`evt-rise relative flex flex-col items-center rounded-2xl border px-1.5 text-center ${m.card} ${
+        m.big ? 'pt-4 pb-4 shadow-md' : 'mt-8 pt-3.5 pb-3.5 shadow-sm'
+      } ${entry.isMe ? 'ring-brand-500 ring-2 ring-offset-2' : ''}`}
+      style={{ animationDelay: place === 1 ? '0s' : place === 2 ? '0.08s' : '0.16s' }}
     >
-      <span className={`font-mono text-[11px] font-bold tracking-[0.12em] ${m.text}`}>#{place}</span>
+      <span className={`inline-flex items-center rounded-full px-2 py-0.5 font-mono text-[10px] font-bold ${m.pill}`}>
+        #{place}
+      </span>
 
       {/* 경품 메달 코인 */}
       <span
-        className={`relative mt-2.5 overflow-hidden rounded-full bg-white shadow-md ring-2 ring-white/70 ${
+        className={`relative mt-2.5 overflow-hidden rounded-full bg-white shadow-sm ring-2 ${m.ring} ${
           m.big ? 'size-16' : 'size-12'
         }`}
       >
@@ -73,12 +82,12 @@ function PodiumCard({ entry, place }: { entry: LeaderboardEntry; place: Place })
         />
       </span>
 
-      <span className={`mt-2.5 max-w-full truncate px-1 text-[13px] font-bold ${m.text}`}>
+      <span className="text-fg mt-2.5 max-w-full truncate px-1 text-[13px] font-bold">
         {entry.isMe ? '나' : entry.maskedNickname}
       </span>
-      <span className={`mt-0.5 font-mono font-extrabold ${m.text} ${m.big ? 'text-2xl' : 'text-xl'}`}>
+      <span className={`mt-0.5 font-mono font-extrabold ${m.tickets} ${m.big ? 'text-2xl' : 'text-xl'}`}>
         {entry.tickets}
-        <span className={`ml-0.5 text-[10px] font-medium ${m.sub}`}>장</span>
+        <span className="text-fg-3 ml-0.5 text-[10px] font-medium">장</span>
       </span>
     </div>
   )
