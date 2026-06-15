@@ -50,34 +50,60 @@ export default function MyTracesView() {
             const lot = findParkingLotBySeq(r.parkingLotSeq)
             return (
               <li key={r.id}>
-                <Link
-                  href={`/p/${r.parkingLotSeq}`}
-                  className="group border-stroke-soft hover:border-stroke-sub flex flex-col gap-3 rounded-2xl border bg-white p-5 transition-colors md:p-6"
-                >
-                  <header className="flex items-start justify-between gap-3">
-                    <div className="min-w-0 flex-1">
-                      <p className="text-text-strong text-base font-semibold md:text-lg">{lot?.name ?? '주차장'}</p>
-                      <p className="text-text-soft mt-1 text-xs">
-                        {formatVisitWindow(r.enterTime, r.exitTime)} · {formatRelativeTime(r.createdAt)}
-                      </p>
-                    </div>
-                    <StarRatingDisplay value={r.rating} size={14} />
-                  </header>
+                <div className="border-stroke-soft flex flex-col gap-3 rounded-2xl border bg-white p-5 md:p-6">
+                  <Link href={`/p/${r.parkingLotSeq}`} className="group flex flex-col gap-3">
+                    <header className="flex items-start justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <p className="text-text-strong group-hover:text-brand-700 text-base font-semibold transition-colors md:text-lg">
+                          {lot?.name ?? '주차장'}
+                        </p>
+                        <p className="text-text-soft mt-1 text-xs">
+                          {formatVisitWindow(r.enterTime, r.exitTime)} · {formatRelativeTime(r.createdAt)}
+                        </p>
+                      </div>
+                      <StarRatingDisplay value={r.rating} size={14} />
+                    </header>
 
-                  {r.content && <p className="text-text-sub line-clamp-3 text-sm leading-relaxed">{r.content}</p>}
+                    {r.content && <p className="text-text-sub line-clamp-3 text-sm leading-relaxed">{r.content}</p>}
 
-                  {r.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5">
-                      {r.tags.map((t) => (
-                        <TagPill key={t} tag={t} />
-                      ))}
-                    </div>
-                  )}
+                    {r.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5">
+                        {r.tags.map((t) => (
+                          <TagPill key={t} tag={t} />
+                        ))}
+                      </div>
+                    )}
 
-                  <p className="text-text-soft text-xs">
-                    닉네임 · <span className="text-text-sub font-medium">{r.nickname}</span>
-                  </p>
-                </Link>
+                    <p className="text-text-soft text-xs">
+                      닉네임 · <span className="text-text-sub font-medium">{r.nickname}</span>
+                    </p>
+                  </Link>
+
+                  <div className="border-stroke-soft flex items-center gap-3 border-t pt-3 text-xs">
+                    <Link
+                      href={`/write?edit=${encodeURIComponent(r.id)}`}
+                      className="text-text-strong font-medium underline-offset-4 hover:underline"
+                    >
+                      수정
+                    </Link>
+                    <span className="text-stroke-sub" aria-hidden>
+                      |
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => vm.remove(r.id)}
+                      className="text-text-soft underline-offset-4 transition-colors hover:text-red-500 hover:underline"
+                    >
+                      삭제
+                    </button>
+                    <Link
+                      href={`/p/${r.parkingLotSeq}`}
+                      className="text-text-soft hover:text-text-strong ml-auto underline-offset-4 hover:underline"
+                    >
+                      상세 보기 →
+                    </Link>
+                  </div>
+                </div>
               </li>
             )
           })}
