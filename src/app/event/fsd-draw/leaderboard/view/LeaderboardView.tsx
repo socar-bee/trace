@@ -19,22 +19,24 @@ export default function LeaderboardView() {
 
       {!vm.data ? null : (
         <>
-          {/* 내 순위 — sticky 카드 */}
+          {/* 내 순위 — sticky 카드 (응모 시 primary 강조) */}
           <div
-            className="border-fg bg-bg sticky top-[72px] z-10 mt-5 flex items-center justify-between border-[1.5px] px-4 py-3"
-            style={{ boxShadow: '2px 2px 0 var(--color-fg)' }}
+            className={`sticky top-[72px] z-10 mt-5 flex items-center justify-between border-[1.5px] px-4 py-3 ${
+              vm.data.myRank ? 'border-brand-500 bg-brand-50' : 'border-fg bg-bg'
+            }`}
+            style={{ boxShadow: vm.data.myRank ? '2px 2px 0 var(--color-brand-500)' : '2px 2px 0 var(--color-fg)' }}
           >
             {vm.data.myRank ? (
               <>
-                <span className="text-fg text-sm font-bold">내 순위 #{vm.data.myRank}</span>
-                <span className="text-fg font-mono text-sm font-bold">{vm.data.myTickets}장</span>
+                <span className="text-brand-700 text-sm font-bold">내 순위 #{vm.data.myRank}</span>
+                <span className="text-brand-700 font-mono text-sm font-bold">{vm.data.myTickets}장</span>
               </>
             ) : (
               <>
                 <span className="text-fg text-sm font-bold">아직 응모 전이에요</span>
                 <Link
                   href="/event/fsd-draw"
-                  className="text-accent-500 font-mono text-xs font-bold underline underline-offset-2"
+                  className="text-brand-600 font-mono text-xs font-bold underline underline-offset-2"
                 >
                   첫 응모권 받기 →
                 </Link>
@@ -46,13 +48,21 @@ export default function LeaderboardView() {
             {vm.data.entries.map((e) => (
               <li
                 key={`${e.rank}-${e.maskedNickname}`}
-                className={`flex items-center gap-3 px-4 py-3 font-mono text-sm ${e.isMe ? 'bg-accent/10' : 'bg-bg'}`}
+                className={`flex items-center gap-3 px-4 py-3 font-mono text-sm ${e.isMe ? 'bg-brand-50' : 'bg-bg'}`}
               >
-                <span className={`w-10 shrink-0 text-xs ${e.rank <= 3 ? 'text-accent-500 font-bold' : 'text-fg-3'}`}>
+                <span
+                  className={`w-10 shrink-0 text-xs ${
+                    e.isMe ? 'text-brand-600 font-bold' : e.rank <= 3 ? 'text-brand-500 font-bold' : 'text-fg-3'
+                  }`}
+                >
                   #{e.rank}
                 </span>
-                <span className="text-fg flex-1 truncate">{e.isMe ? '나 (내 순위)' : e.maskedNickname}</span>
-                <span className="text-fg shrink-0 text-xs font-bold">{e.tickets}장</span>
+                <span className={`flex-1 truncate ${e.isMe ? 'text-brand-700 font-bold' : 'text-fg'}`}>
+                  {e.isMe ? '나 (내 순위)' : e.maskedNickname}
+                </span>
+                <span className={`shrink-0 text-xs font-bold ${e.isMe ? 'text-brand-700' : 'text-fg'}`}>
+                  {e.tickets}장
+                </span>
               </li>
             ))}
           </ol>

@@ -51,7 +51,7 @@ export default function EventHubView() {
                 <span className="flex flex-col">
                   <span className="text-sm font-bold">보유 응모권</span>
                   <span
-                    className={`font-mono text-[10px] ${vm.hasEntered ? 'text-accent-300' : 'text-static-white/50'}`}
+                    className={`font-mono text-[10px] ${vm.hasEntered ? 'text-brand-300' : 'text-static-white/50'}`}
                   >
                     {vm.hasEntered ? '● 응모 완료 · 참여 중' : '아직 응모 전 — 위에서 응모하기'}
                   </span>
@@ -76,7 +76,7 @@ export default function EventHubView() {
           <div className="border-line bg-bg mt-3 border-[1.5px] border-dashed px-4 py-5 text-center">
             <p className="text-fg text-sm font-bold">로그인하면 퀘스트로 응모권을 모을 수 있어요</p>
             <p className="text-fg-3 mt-1 text-xs">
-              위 <span className="text-accent-500 font-semibold">응모하기</span> 버튼으로 시작하세요. 후기·인증·초대마다
+              위 <span className="text-brand-600 font-semibold">응모하기</span> 버튼으로 시작하세요. 후기·인증·초대마다
               응모권이 쌓여요.
             </p>
           </div>

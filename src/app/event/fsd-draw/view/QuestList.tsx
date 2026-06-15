@@ -27,7 +27,7 @@ export default function QuestList({ quests, active, inviteCopied, onCopyInvite, 
             <div className="min-w-0 flex-1">
               <p className="text-fg flex items-baseline gap-2 text-sm font-bold">
                 {q.def.title}
-                <span className="text-accent-500 font-mono text-[11px]">+{q.def.tickets}장</span>
+                <span className="text-brand-500 font-mono text-[11px]">+{q.def.tickets}장</span>
                 {q.def.cap.kind === 'total' && (
                   <span className="text-fg-3 font-mono text-[10px]">
                     {q.earnCount}/{q.def.cap.limit}
