@@ -12,41 +12,37 @@ interface Medal {
   grad: string
   text: string
   sub: string
-  chip: string
   big: boolean
-  /** 카드 배경에 깔리는 경품 이미지 */
-  bg: string
-  bgClass: string
+  /** 경품 메달(coin) 이미지 */
+  prize: string
+  prizeFit: 'cover' | 'contain'
 }
 
 const MEDAL: Record<Place, Medal> = {
-  // 포디움 색상·배경 = 경품 (1등 브랜드 블루·테슬라 / 2등 옐로우·기프티콘 / 3등 전원 그린·모주로고)
+  // 포디움 색상·메달 = 경품 (1등 블루·테슬라 / 2등 옐로우·기프티콘 / 3등 그린·모주로고)
   1: {
-    grad: 'linear-gradient(160deg, var(--color-brand-400) 0%, var(--color-brand-600) 55%, var(--color-brand-800) 100%)',
+    grad: 'linear-gradient(165deg, var(--color-brand-500) 0%, var(--color-brand-700) 100%)',
     text: 'text-static-white',
-    sub: 'text-static-white/70',
-    chip: 'bg-white/25 text-static-white',
+    sub: 'text-static-white/65',
     big: true,
-    bg: '/event/tesla-modelx.jpg',
-    bgClass: 'object-cover object-center opacity-25'
+    prize: '/event/tesla-modelx.jpg',
+    prizeFit: 'cover'
   },
   2: {
-    grad: 'linear-gradient(160deg, var(--color-yellow-300) 0%, var(--color-yellow-500) 55%, var(--color-yellow-600) 100%)',
+    grad: 'linear-gradient(165deg, var(--color-yellow-400) 0%, var(--color-yellow-600) 100%)',
     text: 'text-fg',
-    sub: 'text-fg/55',
-    chip: 'bg-white/60 text-fg',
+    sub: 'text-fg/50',
     big: false,
-    bg: '/event/gift.jpg',
-    bgClass: 'object-cover object-center opacity-30'
+    prize: '/event/gift.jpg',
+    prizeFit: 'cover'
   },
   3: {
-    grad: 'linear-gradient(160deg, var(--color-accent-500) 0%, var(--color-accent-600) 55%, var(--color-accent-700) 100%)',
+    grad: 'linear-gradient(165deg, var(--color-accent-500) 0%, var(--color-accent-700) 100%)',
     text: 'text-static-white',
-    sub: 'text-static-white/75',
-    chip: 'bg-white/25 text-static-white',
+    sub: 'text-static-white/70',
     big: false,
-    bg: '/icons/icn_modu.svg',
-    bgClass: 'object-contain p-8 opacity-20'
+    prize: '/icons/icn_modu.svg',
+    prizeFit: 'contain'
   }
 }
 
@@ -54,37 +50,36 @@ function PodiumCard({ entry, place }: { entry: LeaderboardEntry; place: Place })
   const m = MEDAL[place]
   return (
     <div
-      className={`evt-rise relative overflow-hidden rounded-2xl px-1.5 text-center shadow-[0_8px_24px_-10px_rgba(0,0,0,0.3)] ${
-        m.big ? 'pt-4 pb-5' : 'mt-7 pt-3.5 pb-4'
-      } ${entry.isMe ? 'ring-brand-500 ring-2 ring-offset-2' : ''}`}
+      className={`evt-rise relative flex flex-col items-center rounded-2xl px-1.5 text-center shadow-[0_10px_28px_-12px_rgba(0,0,0,0.35)] ${
+        m.big ? 'pt-5 pb-5' : 'mt-8 pt-4 pb-4'
+      } ${entry.isMe ? 'ring-fg ring-2 ring-offset-2' : ''}`}
       style={{ background: m.grad, animationDelay: place === 1 ? '0s' : place === 2 ? '0.08s' : '0.16s' }}
     >
-      {/* 경품 이미지 배경 (연하게) */}
-      <Image
-        src={m.bg}
-        alt=""
-        fill
-        sizes="220px"
-        aria-hidden
-        className={`pointer-events-none absolute inset-0 z-0 ${m.bgClass}`}
-      />
-      <div className="relative z-10 flex flex-col items-center">
-        <span className={`font-mono text-[11px] font-bold tracking-[0.1em] ${m.text}`}>#{place}</span>
-        <span
-          className={`mt-2 flex items-center justify-center rounded-full font-mono font-extrabold ${m.chip} ${
-            m.big ? 'size-14 text-lg' : 'size-11 text-base'
-          }`}
-        >
-          {entry.isMe ? '나' : entry.maskedNickname.charAt(0)}
-        </span>
-        <span className={`mt-2 max-w-full truncate px-1 text-[13px] font-bold ${m.text}`}>
-          {entry.isMe ? '나' : entry.maskedNickname}
-        </span>
-        <span className={`mt-1 font-mono font-extrabold ${m.text} ${m.big ? 'text-xl' : 'text-lg'}`}>
-          {entry.tickets}
-          <span className={`ml-0.5 text-[10px] font-medium ${m.sub}`}>장</span>
-        </span>
-      </div>
+      <span className={`font-mono text-[11px] font-bold tracking-[0.12em] ${m.text}`}>#{place}</span>
+
+      {/* 경품 메달 코인 */}
+      <span
+        className={`relative mt-2.5 overflow-hidden rounded-full bg-white shadow-md ring-2 ring-white/70 ${
+          m.big ? 'size-16' : 'size-12'
+        }`}
+      >
+        <Image
+          src={m.prize}
+          alt=""
+          fill
+          sizes="64px"
+          aria-hidden
+          className={m.prizeFit === 'contain' ? 'object-contain p-2' : 'object-cover object-center'}
+        />
+      </span>
+
+      <span className={`mt-2.5 max-w-full truncate px-1 text-[13px] font-bold ${m.text}`}>
+        {entry.isMe ? '나' : entry.maskedNickname}
+      </span>
+      <span className={`mt-0.5 font-mono font-extrabold ${m.text} ${m.big ? 'text-2xl' : 'text-xl'}`}>
+        {entry.tickets}
+        <span className={`ml-0.5 text-[10px] font-medium ${m.sub}`}>장</span>
+      </span>
     </div>
   )
 }
