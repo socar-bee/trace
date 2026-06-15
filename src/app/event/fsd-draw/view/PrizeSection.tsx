@@ -1,19 +1,15 @@
 import Image from 'next/image'
 
-import { IcoSparkle, IcoTicket } from '@/shared/components/icons'
-
-type PrizeIcon = 'sparkle' | 'ticket'
-
 interface Prize {
   rank: string
   badge: string
   name: string
   sub: string
   count: string
-  img?: string
-  icon?: PrizeIcon
+  img: string
+  /** cover: 사진이 원을 꽉 채움 / contain: 로고를 가운데 여백 두고 */
+  fit: 'cover' | 'contain'
   circle: string
-  iconColor: string
 }
 
 const PRIZES: Prize[] = [
@@ -24,8 +20,8 @@ const PRIZES: Prize[] = [
     sub: '1개월 사용권',
     count: '단 2명',
     img: '/event/tesla-modelx.jpg',
-    circle: 'bg-bg-2',
-    iconColor: ''
+    fit: 'cover',
+    circle: 'bg-bg-2'
   },
   {
     rank: '2등',
@@ -33,9 +29,9 @@ const PRIZES: Prize[] = [
     name: '기프티콘 5천원권',
     sub: '모바일 쿠폰',
     count: '300명',
-    icon: 'sparkle',
-    circle: 'bg-yellow-50',
-    iconColor: 'text-yellow-600'
+    img: '/event/gift.svg',
+    fit: 'cover',
+    circle: 'bg-yellow-100'
   },
   {
     rank: '전원',
@@ -43,9 +39,9 @@ const PRIZES: Prize[] = [
     name: '주차 할인 쿠폰',
     sub: '최초 응모 시 1회',
     count: '참여자 전원',
-    icon: 'ticket',
-    circle: 'bg-accent-50',
-    iconColor: 'text-accent-600'
+    img: '/icons/icn_modu.svg',
+    fit: 'contain',
+    circle: 'bg-bg'
   }
 ]
 
@@ -69,17 +65,13 @@ export default function PrizeSection() {
               <div
                 className={`border-line-2 relative size-[88px] overflow-hidden rounded-full border-[1.5px] sm:size-[104px] ${p.circle}`}
               >
-                {p.img ? (
-                  <Image src={p.img} alt={p.name} fill sizes="104px" className="object-cover object-center" />
-                ) : (
-                  <span className="flex h-full items-center justify-center">
-                    {p.icon === 'sparkle' ? (
-                      <IcoSparkle className={`size-9 ${p.iconColor}`} />
-                    ) : (
-                      <IcoTicket className={`size-9 ${p.iconColor}`} />
-                    )}
-                  </span>
-                )}
+                <Image
+                  src={p.img}
+                  alt={p.name}
+                  fill
+                  sizes="104px"
+                  className={p.fit === 'contain' ? 'object-contain p-5' : 'object-cover object-center'}
+                />
               </div>
               <span
                 className={`absolute -top-1 -left-1 flex size-8 items-center justify-center rounded-full font-mono text-[11px] font-bold shadow-sm ${p.badge}`}
